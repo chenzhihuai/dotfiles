@@ -69,6 +69,7 @@ Plug 'junegunn/gv.vim'
 
 Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
 Plug 'junegunn/fzf.vim'
+"Plug 'liuchengxu/vim-clap', { 'do': ':Clap install-binary!' }
 " Plug 'troydm/easytree.vim'
 "Plug 'thaerkh/vim-workspace'
 
@@ -138,6 +139,7 @@ if has_key(g:plugs, 'coc.nvim')
     nmap <silent> gr <Plug>(coc-references)
     nmap <silent> <leader>R <Plug>(coc-rename)
     nmap <silent> <leader>E :CocList diagnostics<cr>
+    nmap <silent> <leader>a :CocCommand clangd.switchSourceHeader<cr>
     function! s:show_documentation()
         if &filetype == 'vim'
             execute 'h '.expand('<cword>')
@@ -202,12 +204,13 @@ if has_key(g:plugs, 'fzf.vim')
     nmap <leader>h :History<cr>
     nmap <leader>f :Files<cr>
     nmap <leader>B :Buffers<cr>
+    nmap <leader>rg :Rg<cr>
     if has('win32')
         let g:fzf_preview_window=[]
     endif
     let g:fzf_history_dir = '~/.local/share/fzf-history'
+    let g:fzf_preview_bash = 'C:\Program Files\Git\bin\bash.exe'
 endif
-
 nnoremap gh ^
 nnoremap gl $
 nnoremap bn :bn<cr>
