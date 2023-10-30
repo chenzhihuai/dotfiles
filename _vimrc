@@ -92,13 +92,13 @@ Plug 'millermedeiros/vim-statline'
 Plug 'easymotion/vim-easymotion'
 Plug 'justinmk/vim-sneak'
 Plug 'tpope/vim-surround' "cs ds ys
+Plug 'bronson/vim-visual-star-search'
+Plug 'godlygeek/tabular' " Tabularize /^[^,]*\zs/r1c1l0 (digits are spaces before ,)
+Plug 'mg979/vim-visual-multi' "<c-n> n N q Q [ ] <c-down>
+
 Plug 'm1foley/vim-expresso' "g= g== g=$
 Plug 'tommcdo/vim-exchange' "cxiw
 Plug 'vim-scripts/ReplaceWithRegister' "gr grr
-Plug 'bronson/vim-visual-star-search'
-" Tabularize /^[^,]*\zs/r1c1l0 (digits are number before ,)
-Plug 'godlygeek/tabular'  "Tabularize /^[^,]* first comma
-Plug 'mg979/vim-visual-multi' "<c-n> n N q Q [ ] <c-down>
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => Plugs Config
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -211,10 +211,18 @@ if has_key(g:plugs, 'fzf.vim')
     let g:fzf_history_dir = '~/.local/share/fzf-history'
     let g:fzf_preview_bash = 'C:\Program Files\Git\bin\bash.exe'
 endif
+
 nnoremap gh ^
 nnoremap gl $
 nnoremap bn :bn<cr>
 nnoremap bp :bp<cr>
+nnoremap bd :bd<cr>
+imap <c-backspace> <c-w>
+nnoremap <c-j> <c-w>j
+nnoremap <c-l> <c-w>l
+nnoremap <c-k> <c-w>k
+nnoremap <c-h> <c-w>h
+nnoremap Y y$
 nnoremap <leader>cd :cd %:p:h<cr>
 nnoremap <cr> :
 nnoremap <leader>e :e $MYVIMRC<cr>
