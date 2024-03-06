@@ -1,5 +1,66 @@
-let mapleader="\<space>"
+"==== Keymap =====
 
+let g:mapleader=' '
+" everyone must agree
+nnoremap H ^
+nnoremap L $
+nnoremap Y y$
+vnoremap < <gv
+vnoremap > >gv
+nmap j gj
+nmap k gk
+vmap j gj
+vmap k gk
+imap <c-backspace> <c-w>
+nnoremap <c-j> <c-w>j
+nnoremap <c-l> <c-w>l
+nnoremap <c-k> <c-w>k
+nnoremap <c-h> <c-w>h
+
+" buffers
+nnoremap <leader>bn :bn<cr>
+nnoremap <leader>bp :bp<cr>
+nnoremap <leader>bd :bd<cr>
+nnoremap Q :clo<cr>
+
+
+" jump
+map <leader>w <plug>(easymotion-w)
+nmap s <plug>(easymotion-s2)
+map <Leader>; <Plug>(easymotion-next)
+map <Leader>, <Plug>(easymotion-prev)
+map g1 1<c-w>w
+map g2 2<c-w>w
+map g3 3<c-w>w
+map g4 4<c-w>w
+map g5 5<c-w>w
+map g6 6<c-w>w
+
+command! W w !sudo tee % > /dev/null
+nnoremap <leader>cd :lcd %:p:h<cr>
+nnoremap <leader>e :e $MYVIMRC<cr>
+
+" fzf
+nmap <leader>h :History<cr>
+nmap <leader>f :Files<cr>
+nmap <leader>B :Buffers<cr>
+nmap <leader>rg :Rg<cr>
+
+" coc
+nmap <silent> [g <Plug>(coc-diagnostic-prev)
+nmap <silent> ]g <Plug>(coc-diagnostic-next)
+nmap <silent> gd <Plug>(coc-definition)
+nmap <silent> gy <Plug>(coc-type-definition)
+nmap <silent> gi <Plug>(coc-implementation)
+nmap <silent> gr <Plug>(coc-references)
+nmap <silent> <leader>R <Plug>(coc-rename)
+nmap <silent> <leader>E :CocList diagnostics<cr>
+nmap <silent> <leader>a :CocCommand clangd.switchSourceHeader<cr>
+
+autocmd BufReadPost quickfix nnoremap <buffer> <CR> <CR>
+nnoremap <silent> <Leader>sc :nohlsearch<CR>
+
+" ==== Plugs ====
 " Install vim-plug if not found
 let data_dir = has('nvim') ? stdpath('data') . '/site' : expand('~/vimfiles')
 if empty(glob(data_dir . '/autoload/plug.vim'))
@@ -15,19 +76,18 @@ autocmd VimEnter * if len(filter(values(g:plugs), '!isdirectory(v:val.dir)'))
 
 call plug#begin(data_dir . '/plugged')
 
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => Basic Setting
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-Plug 'liuchengxu/vim-better-default'
-" Plug 'tpope/vim-sleuth'
+Plug 'chenzhihuai/vim-better-default'
 Plug 'farmergreg/vim-lastplace'
-Plug 'octref/rootignore'
-Plug 'roxma/vim-paste-easy'
-Plug 'triglav/vim-visual-increment' "<c-v> then <c-a>
-Plug 'junegunn/vim-slash'
-Plug 'kana/vim-smartword'
-Plug 'tpope/vim-repeat'
+Plug 'triglav/vim-visual-increment' "Inc/des operators on columns
+Plug 'junegunn/vim-slash' "Enhancing search: automatically clear and in-place start-search
+Plug 'kana/vim-smartword' "Smart motions on words
+Plug 'tpope/vim-repeat' "For surround and speeddating
 Plug 'machakann/vim-highlightedyank'
 "Plug 'henrik/vim-indexed-search' 
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => Language
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 Plug 'scrooloose/nerdcommenter'
@@ -35,24 +95,22 @@ Plug 'vim-scripts/matchit.zip'
 Plug 'alvan/vim-closetag'
 Plug 'mattn/emmet-vim'
 "Plug 'valloric/matchtagalways'
-Plug 'puremourning/vimspector'
+"Plug 'puremourning/vimspector'
 "Plug 'cpiger/NeoDebug'
-
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => Completion
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-Plug 'neoclide/coc.nvim', {'branch': 'release'}
+"Plug 'neoclide/coc.nvim', {'branch': 'release'}
 "Plug 'ervandew/supertab'
-Plug 'Raimondi/delimitMate'
+Plug 'jiangmiao/auto-pairs'
 Plug 'gelguy/wilder.nvim'
 Plug 'roxma/nvim-yarp', { 'do': 'pip install -r requirements.txt' }
 Plug 'roxma/vim-hug-neovim-rpc'
-"Plug 'bfrg/vim-cpp-modern'
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => Code display
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-Plug 'luochen1990/rainbow'
-Plug 'itchyny/vim-cursorword'
+Plug 'frazrepo/vim-rainbow'
+"Plug 'itchyny/vim-cursorword'
 Plug 'lifepillar/vim-gruvbox8'
 Plug 'morhetz/gruvbox'
 Plug 'lifepillar/vim-solarized8'
@@ -61,36 +119,30 @@ Plug 'altercation/vim-colors-solarized'
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => Integrations
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-Plug 'tpope/vim-fugitive'
+"Plug 'tpope/vim-fugitive' "Git commands
 Plug 'mhinz/vim-signify'
 " Plug 'airblade/vim-gitgutter'
 "Plug 'gregsexton/gitv'
-Plug 'junegunn/gv.vim'
+Plug 'junegunn/gv.vim' "git commit browser
 
 Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
 Plug 'junegunn/fzf.vim'
 "Plug 'liuchengxu/vim-clap', { 'do': ':Clap install-binary!' }
 " Plug 'troydm/easytree.vim'
-"Plug 'thaerkh/vim-workspace'
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => Interface
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 Plug 'mhinz/vim-startify'
-Plug 'ap/vim-buftabline'
-"Plug 'pacha/vem-tabline'
-"Plug 'bagrat/vim-buffet'
 " Plug 'skywind3000/vim-quickui'
-"Plug 'Yilin-Yang/vim-markbar'
-Plug 'millermedeiros/vim-statline'
-"Plug 'glepnir/spaceline.vim'
-"Plug 'rafi/vim-tinyline'
-"Plug 'yuttie/comfortable-motion.vim'
+Plug 'junegunn/vim-peekaboo' "peek register
+Plug 'chenzhihuai/vim-buftabline'
+Plug 'chenzhihuai/vim-statline'
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => Commands
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 Plug 'easymotion/vim-easymotion'
-Plug 'justinmk/vim-sneak'
+"Plug 'justinmk/vim-sneak'
 Plug 'tpope/vim-surround' "cs ds ys
 Plug 'bronson/vim-visual-star-search'
 Plug 'godlygeek/tabular' " Tabularize /^[^,]*\zs/r1c1l0 (digits are spaces before ,)
@@ -100,9 +152,10 @@ Plug 'm1foley/vim-expresso' "g= g== g=$
 Plug 'tommcdo/vim-exchange' "cxiw
 Plug 'vim-scripts/ReplaceWithRegister' "gr grr
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" => Plugs Config
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 call plug#end()
+
+" ==== Plug Configs ====
+
 if has_key(g:plugs, 'wilder.nvim')
     call wilder#setup({ 'modes': [':', '/', '?'], })
     " 'highlighter' : applies highlighting to the candidates
@@ -130,16 +183,6 @@ if has_key(g:plugs, 'coc.nvim')
     endfunction
 
     let g:coc_global_extensions=[ 'coc-json', 'coc-clangd', 'coc-pyright']
-    nmap <silent> [g <Plug>(coc-diagnostic-prev)
-    nmap <silent> ]g <Plug>(coc-diagnostic-next)
-    " Remap keys for gotos
-    nmap <silent> gd <Plug>(coc-definition)
-    nmap <silent> gy <Plug>(coc-type-definition)
-    nmap <silent> gi <Plug>(coc-implementation)
-    nmap <silent> gr <Plug>(coc-references)
-    nmap <silent> <leader>R <Plug>(coc-rename)
-    nmap <silent> <leader>E :CocList diagnostics<cr>
-    nmap <silent> <leader>a :CocCommand clangd.switchSourceHeader<cr>
     function! s:show_documentation()
         if &filetype == 'vim'
             execute 'h '.expand('<cword>')
@@ -153,13 +196,6 @@ if has_key(g:plugs, 'coc.nvim')
     omap if <Plug>(coc-funcobj-i)
     omap af <Plug>(coc-funcobj-a)
 endif
-
-if has_key(g:plugs, 'vim-easymotion')
-    map <leader>w <plug>(easymotion-w)
-    "nmap s <plug>(easymotion-f2)
-    map <Leader>; <Plug>(easymotion-next)
-    map <Leader>, <Plug>(easymotion-prev)
-endif 
 
 if has_key(g:plugs, 'vim-better-default')
     let g:vim_better_default_minimum            = 0
@@ -200,11 +236,21 @@ if has_key(g:plugs, 'vimspector')
     sign define vimspectorCurrentFrame text=>   texthl=Special
 endif
 
+if has_key(g:plugs, 'vim-buftabline')
+let g:buftabline_numbers=2
+let g:buftabline_separators=1
+    nmap <leader>1 <Plug>BufTabLine.Go(1)
+    nmap <leader>2 <Plug>BufTabLine.Go(2)
+    nmap <leader>3 <Plug>BufTabLine.Go(3)
+    nmap <leader>4 <Plug>BufTabLine.Go(4)
+    nmap <leader>5 <Plug>BufTabLine.Go(5)
+    nmap <leader>6 <Plug>BufTabLine.Go(6)
+    nmap <leader>7 <Plug>BufTabLine.Go(7)
+    nmap <leader>8 <Plug>BufTabLine.Go(8)
+    nmap <leader>9 <Plug>BufTabLine.Go(9)
+    nmap <leader>0 <Plug>BufTabLine.Go(10)
+endif
 if has_key(g:plugs, 'fzf.vim')
-    nmap <leader>h :History<cr>
-    nmap <leader>f :Files<cr>
-    nmap <leader>B :Buffers<cr>
-    nmap <leader>rg :Rg<cr>
     if has('win32')
         let g:fzf_preview_window=[]
     endif
@@ -212,29 +258,36 @@ if has_key(g:plugs, 'fzf.vim')
     let g:fzf_preview_bash = 'C:\Program Files\Git\bin\bash.exe'
 endif
 
-nnoremap gh ^
-nnoremap gl $
-nnoremap bn :bn<cr>
-nnoremap bp :bp<cr>
-nnoremap bd :bd<cr>
-imap <c-backspace> <c-w>
-nnoremap <c-j> <c-w>j
-nnoremap <c-l> <c-w>l
-nnoremap <c-k> <c-w>k
-nnoremap <c-h> <c-w>h
-nnoremap Y y$
-nnoremap <leader>cd :cd %:p:h<cr>
-nnoremap <cr> :
-nnoremap <leader>e :e $MYVIMRC<cr>
-set cmdheight=2
+" ==== Patches ====
+
+set noincsearch
+set nocursorline
+"set cmdheight=1
 set background=dark
+let g:gruvbox_plugin_hi_groups=1
 colorscheme gruvbox8
 
-"python support
-"let &pythonthreehome=fnamemodify(exepath('python'), ':h:p')
-"let &pythonthreedll=&pythonthreehome . '\\python311.dll'
+if has('win32') || has('win64')
+    set directory=~/vimfiles/tmp/,.
+    set backupdir=~/vimfiles/tmp/,.
+    set undodir=~/vimfiles/tmp/,.
+endif
+let g:rainbow_active = 1
+
+let g:rainbow_load_separately = [
+    \ [ '*' , [['(', ')'], ['\[', '\]'], ['{', '}']] ],
+    \ [ '*.tex' , [['(', ')'], ['\[', '\]']] ],
+    \ [ '*.cpp' , [['(', ')'], ['\[', '\]'], ['{', '}']] ],
+    \ [ '*.{html,htm}' , [['(', ')'], ['\[', '\]'], ['{', '}'], ['<\a[^>]*>', '</[^>]*>']] ],
+    \ ]
 
 if has("gui_running")
+    set guifont=consolas:h11
     set lines=999 columns=999
-    set titlestring=%F\ (PWD:\ %{substitute(getcwd(),\ $HOME,\ '~',\ '')})
+    "set titlestring=%F\ (PWD:\ %{substitute(getcwd(),\ $HOME,\ '~',\ '')})
+    set guioptions-=mT
 endif
+
+" wilder.nvim
+let g:python3_host_prog="C:\\Users\\chenz\\AppData\\Local\\Programs\\Python\\Python312\\python.exe"
+
