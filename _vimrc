@@ -16,6 +16,9 @@ nnoremap <c-j> <c-w>j
 nnoremap <c-l> <c-w>l
 nnoremap <c-k> <c-w>k
 nnoremap <c-h> <c-w>h
+nnoremap =a gg=G''
+
+nnoremap zz :mks!<cr>:wqa!<cr>
 
 " buffers
 nnoremap <leader>bn :bn<cr>
@@ -25,10 +28,10 @@ nnoremap Q :clo<cr>
 
 
 " jump
-map <leader>w <plug>(easymotion-w)
-nmap s <plug>(easymotion-s2)
-map <Leader>; <Plug>(easymotion-next)
-map <Leader>, <Plug>(easymotion-prev)
+map <leader><space> <plug>(easymotion-bd-f)
+"nmap s <plug>(easymotion-s2)
+"map <Leader>; <Plug>(easymotion-next)
+"map <Leader>, <Plug>(easymotion-prev)
 map g1 1<c-w>w
 map g2 2<c-w>w
 map g3 3<c-w>w
@@ -82,9 +85,9 @@ call plug#begin(data_dir . '/plugged')
 Plug 'chenzhihuai/vim-better-default'
 Plug 'farmergreg/vim-lastplace'
 Plug 'triglav/vim-visual-increment' "Inc/des operators on columns
-Plug 'junegunn/vim-slash' "Enhancing search: automatically clear and in-place start-search
+"Plug 'junegunn/vim-slash' "Enhancing search: automatically clear and in-place start-search
 Plug 'kana/vim-smartword' "Smart motions on words
-Plug 'tpope/vim-repeat' "For surround and speeddating
+"Plug 'tpope/vim-repeat' "For surround and speeddating
 Plug 'machakann/vim-highlightedyank'
 "Plug 'henrik/vim-indexed-search' 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -96,7 +99,6 @@ Plug 'alvan/vim-closetag'
 Plug 'mattn/emmet-vim'
 "Plug 'valloric/matchtagalways'
 "Plug 'puremourning/vimspector'
-"Plug 'cpiger/NeoDebug'
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => Completion
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -143,10 +145,13 @@ Plug 'chenzhihuai/vim-statline'
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 Plug 'easymotion/vim-easymotion'
 "Plug 'justinmk/vim-sneak'
-Plug 'tpope/vim-surround' "cs ds ys
+"cs ds ys and v_S
+Plug 'machakann/vim-sandwich' 
 Plug 'bronson/vim-visual-star-search'
-Plug 'godlygeek/tabular' " Tabularize /^[^,]*\zs/r1c1l0 (digits are spaces before ,)
-Plug 'mg979/vim-visual-multi' "<c-n> n N q Q [ ] <c-down>
+" Tabularize /^[^,]*\zs/r1c1l0 (digits are spaces before ,)
+Plug 'godlygeek/tabular' 
+"<c-n> n N q Q [ ] <c-down>
+Plug 'mg979/vim-visual-multi' 
 
 Plug 'm1foley/vim-expresso' "g= g== g=$
 Plug 'tommcdo/vim-exchange' "cxiw
@@ -257,9 +262,15 @@ if has_key(g:plugs, 'fzf.vim')
     let g:fzf_history_dir = '~/.local/share/fzf-history'
     let g:fzf_preview_bash = 'C:\Program Files\Git\bin\bash.exe'
 endif
+if has_key(g:plugs, 'vim-sandwich')
+    runtime macros/sandwich/keymap/surround.vim
+endif
 
 " ==== Patches ====
 
+let g:EasyMotion_smartcase = 1
+let g:EasyMotion_do_mapping=0
+set splitright
 set noincsearch
 set nocursorline
 "set cmdheight=1
