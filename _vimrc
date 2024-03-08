@@ -1,9 +1,8 @@
 "==== Keymap =====
 
 let g:mapleader=' '
-" everyone must agree
-nnoremap H ^
-nnoremap L $
+" everyone should agree
+" yank to eol
 nnoremap Y y$
 vnoremap < <gv
 vnoremap > >gv
@@ -12,19 +11,23 @@ nmap k gk
 vmap j gj
 vmap k gk
 imap <c-backspace> <c-w>
+nnoremap H ^
+nnoremap L $
 nnoremap <c-j> <c-w>j
 nnoremap <c-l> <c-w>l
 nnoremap <c-k> <c-w>k
 nnoremap <c-h> <c-w>h
-nnoremap =a gg=G''
 
+" align entire buffer
+nnoremap =a gg=G''
+" save session and quit
 nnoremap zz :mks!<cr>:wqa!<cr>
 
 " buffers
 nnoremap <leader>bn :bn<cr>
 nnoremap <leader>bp :bp<cr>
 nnoremap <leader>bd :bd<cr>
-nnoremap Q :clo<cr>
+nnoremap Q :bd<cr>
 
 
 " jump
@@ -44,8 +47,8 @@ nnoremap <leader>cd :lcd %:p:h<cr>
 nnoremap <leader>e :e $MYVIMRC<cr>
 
 " fzf
-nmap <leader>h :History<cr>
-nmap <leader>f :Files<cr>
+nmap <leader>H :History<cr>
+nmap <leader>F :Files<cr>
 nmap <leader>B :Buffers<cr>
 nmap <leader>rg :Rg<cr>
 
@@ -208,13 +211,7 @@ if has_key(g:plugs, 'vim-better-default')
     let g:vim_better_default_persistent_undo    = 1
     let g:vim_better_default_enable_folding     = 1
     let g:vim_better_default_key_mapping        = 0
-    let g:vim_better_default_basic_key_mapping  = 1
-    let g:vim_better_default_buffer_key_mapping = 1
-    let g:vim_better_default_file_key_mapping   = 1
-    let g:vim_better_default_fold_key_mapping   = 1
-    let g:vim_better_default_window_key_mapping = 1
     runtime! plugin/default.vim
-    set norelativenumber
 endif
 
 if has_key(g:plugs, 'vimspector')
@@ -231,14 +228,6 @@ if has_key(g:plugs, 'vimspector')
                 \ })
 
     noremap <leader>db :tabe .vimspector.json<CR>:LoadVimSpectorJsonTemplate<CR>
-    sign define vimspectorBP text=o             texthl=WarningMsg
-    sign define vimspectorBPCond text=o?        texthl=WarningMsg
-    sign define vimspectorBPLog text=!!         texthl=SpellRare
-    sign define vimspectorBPDisabled text=o!    texthl=LineNr
-    sign define vimspectorPC text=\ >           texthl=MatchParen
-    sign define vimspectorPCBP text=o>          texthl=MatchParen
-    sign define vimspectorCurrentThread text=>  texthl=MatchParen
-    sign define vimspectorCurrentFrame text=>   texthl=Special
 endif
 
 if has_key(g:plugs, 'vim-buftabline')
@@ -270,19 +259,14 @@ endif
 
 let g:EasyMotion_smartcase = 1
 let g:EasyMotion_do_mapping=0
-set splitright
-set noincsearch
-set nocursorline
+"set splitright
+"set noincsearch
+"set nocursorline
 "set cmdheight=1
 set background=dark
 let g:gruvbox_plugin_hi_groups=1
 colorscheme gruvbox8
 
-if has('win32') || has('win64')
-    set directory=~/vimfiles/tmp/,.
-    set backupdir=~/vimfiles/tmp/,.
-    set undodir=~/vimfiles/tmp/,.
-endif
 let g:rainbow_active = 1
 
 let g:rainbow_load_separately = [
