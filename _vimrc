@@ -1,5 +1,6 @@
 "=== Helper ===
 " ctrl-w } : open tag in preview window
+" zz save session and quit
 "=== Keymap ===
 
 let g:mapleader=' '
@@ -51,6 +52,7 @@ command! W w !sudo tee % > /dev/null
 nnoremap <leader>cd :lcd %:p:h<cr>
 nnoremap <leader>e :e $MYVIMRC<cr>
 nnoremap <leader>R :so $MYVIMRC<cr>
+nmap <leader>S :Starify<cr>
 
 " fzf
 nmap <leader>H :History<cr>
