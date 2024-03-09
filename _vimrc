@@ -18,10 +18,13 @@ nnoremap <c-l> <c-w>l
 nnoremap <c-k> <c-w>k
 nnoremap <c-h> <c-w>h
 
+" no cursor motion while *-search
+"nnoremap * *N
 " align entire buffer
 nnoremap =a gg=G''
 " save session and quit
 nnoremap zz :mks!<cr>:wqa!<cr>
+nnoremap <leader>q :qa!<cr>
 
 " buffers
 nnoremap <leader>bn :bn<cr>
@@ -68,9 +71,17 @@ nnoremap <silent> <Leader>sc :nohlsearch<CR>
 
 " ==== Plugs ====
 " Install vim-plug if not found
-let data_dir = has('nvim') ? stdpath('data') . '/site' : expand('~/vimfiles')
-if empty(glob(data_dir . '/autoload/plug.vim'))
-    silent execute '!curl -fLo '.data_dir.'/autoload/plug.vim --create-dirs  https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim'
+if !exists('$VIMHOME')
+    if has('nvim')
+        let $VIMHOME=stdpath('data')
+    elseif has('win32') || has ('win64')
+        let $VIMHOME=$HOME.'/vimfiles'
+    else
+        let $VIMHOME=$HOME.'/.vim'
+    endif
+endif
+if empty(glob($VIMHOME. '/autoload/plug.vim'))
+    silent execute '!curl -fLo '.$VIMHOME.'/autoload/plug.vim --create-dirs  https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim'
     autocmd VimEnter * PlugInstall --sync | source $MYVIMRC
 endif
 
@@ -80,19 +91,20 @@ autocmd VimEnter * if len(filter(values(g:plugs), '!isdirectory(v:val.dir)'))
             \| endif
 
 
-call plug#begin(data_dir . '/plugged')
+call plug#begin($VIMHOME. '/plugged')
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => Basic Setting
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 Plug 'chenzhihuai/vim-better-default'
 Plug 'farmergreg/vim-lastplace'
-Plug 'triglav/vim-visual-increment' "Inc/des operators on columns
-"Plug 'junegunn/vim-slash' "Enhancing search: automatically clear and in-place start-search
-Plug 'kana/vim-smartword' "Smart motions on words
-"Plug 'tpope/vim-repeat' "For surround and speeddating
+Plug 'kana/vim-smartword'
 Plug 'machakann/vim-highlightedyank'
-"Plug 'henrik/vim-indexed-search' 
+Plug 'wincent/terminus'
+" Enhance Search
+"Plug 'henrik/vim-indexed-search'
+" keep pos *-search
+Plug 'haya14busa/vim-asterisk'
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => Language
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -107,7 +119,7 @@ Plug 'mattn/emmet-vim'
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 "Plug 'neoclide/coc.nvim', {'branch': 'release'}
 "Plug 'ervandew/supertab'
-Plug 'jiangmiao/auto-pairs'
+Plug 'raimondi/delimitmate'
 Plug 'gelguy/wilder.nvim'
 Plug 'roxma/nvim-yarp', { 'do': 'pip install -r requirements.txt' }
 Plug 'roxma/vim-hug-neovim-rpc'
@@ -124,15 +136,13 @@ Plug 'altercation/vim-colors-solarized'
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => Integrations
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-"Plug 'tpope/vim-fugitive' "Git commands
+" Git commands
+"Plug 'tpope/vim-fugitive'
 Plug 'mhinz/vim-signify'
 " Plug 'airblade/vim-gitgutter'
-"Plug 'gregsexton/gitv'
-Plug 'junegunn/gv.vim' "git commit browser
 
 Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
 Plug 'junegunn/fzf.vim'
-"Plug 'liuchengxu/vim-clap', { 'do': ':Clap install-binary!' }
 " Plug 'troydm/easytree.vim'
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -140,7 +150,8 @@ Plug 'junegunn/fzf.vim'
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 Plug 'mhinz/vim-startify'
 " Plug 'skywind3000/vim-quickui'
-Plug 'junegunn/vim-peekaboo' "peek register
+" peek register
+Plug 'junegunn/vim-peekaboo'
 Plug 'chenzhihuai/vim-buftabline'
 Plug 'chenzhihuai/vim-statline'
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -149,16 +160,19 @@ Plug 'chenzhihuai/vim-statline'
 Plug 'easymotion/vim-easymotion'
 "Plug 'justinmk/vim-sneak'
 "cs ds ys and v_S
-Plug 'machakann/vim-sandwich' 
-Plug 'bronson/vim-visual-star-search'
+Plug 'machakann/vim-sandwich'
 " Tabularize /^[^,]*\zs/r1c1l0 (digits are spaces before ,)
-Plug 'godlygeek/tabular' 
+Plug 'godlygeek/tabular'
 "<c-n> n N q Q [ ] <c-down>
-Plug 'mg979/vim-visual-multi' 
-
-Plug 'm1foley/vim-expresso' "g= g== g=$
-Plug 'tommcdo/vim-exchange' "cxiw
-Plug 'vim-scripts/ReplaceWithRegister' "gr grr
+Plug 'mg979/vim-visual-multi'
+"<c-v> then <c-a> or <c-x> to increase/descrease numbers
+Plug 'triglav/vim-visual-increment'
+"eval expression with g= g== g=
+Plug 'm1foley/vim-expresso'
+"cxiw
+Plug 'tommcdo/vim-exchange'
+"gr grr
+Plug 'vim-scripts/ReplaceWithRegister'
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 call plug#end()
 
@@ -253,6 +267,13 @@ if has_key(g:plugs, 'fzf.vim')
 endif
 if has_key(g:plugs, 'vim-sandwich')
     runtime macros/sandwich/keymap/surround.vim
+endif
+if has_key(g:plugs, 'vim-asterisk')
+    map *  <Plug>(asterisk-z*)
+    map #  <Plug>(asterisk-z#)
+    map g* <Plug>(asterisk-gz*)
+    map g# <Plug>(asterisk-gz#)
+    let g:asterisk#keeppos = 1
 endif
 
 " ==== Patches ====
