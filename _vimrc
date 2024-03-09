@@ -1,4 +1,6 @@
-"==== Keymap =====
+"=== Helper ===
+" ctrl-w } : open tag in preview window
+"=== Keymap ===
 
 let g:mapleader=' '
 " everyone should agree
@@ -48,6 +50,7 @@ map g6 6<c-w>w
 command! W w !sudo tee % > /dev/null
 nnoremap <leader>cd :lcd %:p:h<cr>
 nnoremap <leader>e :e $MYVIMRC<cr>
+nnoremap <leader>R :so $MYVIMRC<cr>
 
 " fzf
 nmap <leader>H :History<cr>
@@ -69,7 +72,7 @@ nmap <silent> <leader>a :CocCommand clangd.switchSourceHeader<cr>
 autocmd BufReadPost quickfix nnoremap <buffer> <CR> <CR>
 nnoremap <silent> <Leader>sc :nohlsearch<CR>
 
-" ==== Plugs ====
+" === Plugs ===
 " Install vim-plug if not found
 if !exists('$VIMHOME')
     if has('nvim')
@@ -110,15 +113,15 @@ Plug 'haya14busa/vim-asterisk'
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 Plug 'scrooloose/nerdcommenter'
 Plug 'vim-scripts/matchit.zip'
-Plug 'alvan/vim-closetag'
-Plug 'mattn/emmet-vim'
+"Plug 'alvan/vim-closetag'
+"Plug 'mattn/emmet-vim'
 "Plug 'valloric/matchtagalways'
 "Plug 'puremourning/vimspector'
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => Completion
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 "Plug 'neoclide/coc.nvim', {'branch': 'release'}
-"Plug 'ervandew/supertab'
+Plug 'ervandew/supertab'
 Plug 'raimondi/delimitmate'
 Plug 'gelguy/wilder.nvim'
 Plug 'roxma/nvim-yarp', { 'do': 'pip install -r requirements.txt' }
@@ -131,7 +134,6 @@ Plug 'frazrepo/vim-rainbow'
 Plug 'lifepillar/vim-gruvbox8'
 Plug 'morhetz/gruvbox'
 Plug 'lifepillar/vim-solarized8'
-Plug 'altercation/vim-colors-solarized'
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => Integrations
@@ -143,7 +145,9 @@ Plug 'mhinz/vim-signify'
 
 Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
 Plug 'junegunn/fzf.vim'
-" Plug 'troydm/easytree.vim'
+" tagbar enhancement
+Plug 'liuchengxu/vista.vim'
+"Plug 'troydm/easytree.vim'
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => Interface
@@ -176,7 +180,7 @@ Plug 'vim-scripts/ReplaceWithRegister'
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 call plug#end()
 
-" ==== Plug Configs ====
+" === Plug Configs ===
 
 if has_key(g:plugs, 'wilder.nvim')
     call wilder#setup({ 'modes': [':', '/', '?'], })
@@ -276,8 +280,9 @@ if has_key(g:plugs, 'vim-asterisk')
     let g:asterisk#keeppos = 1
 endif
 
-" ==== Patches ====
-
+" === Patches ===
+" split vertically by default
+autocmd WinNew * wincmd L
 let g:EasyMotion_smartcase = 1
 let g:EasyMotion_do_mapping=0
 "set splitright
@@ -305,5 +310,7 @@ if has("gui_running")
 endif
 
 " wilder.nvim
-let g:python3_host_prog="C:\\Users\\chenz\\AppData\\Local\\Programs\\Python\\Python312\\python.exe"
+if has('win64') || has('win32')
+    let g:python3_host_prog="C:\\Users\\chenz\\AppData\\Local\\Programs\\Python\\Python312\\python.exe"
+endif
 
