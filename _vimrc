@@ -33,7 +33,8 @@ nnoremap <leader>q :qa!<cr>
 nnoremap <leader>bn :bn<cr>
 nnoremap <leader>bp :bp<cr>
 nnoremap <leader>bd :bd<cr>
-nnoremap Q :bd<cr>
+nnoremap <leader>e :e .<cr>
+nnoremap Q :Bdelete<cr>
 
 
 " jump
@@ -50,7 +51,7 @@ map g6 6<c-w>w
 
 command! W w !sudo tee % > /dev/null
 nnoremap <leader>cd :lcd %:p:h<cr>
-nnoremap <leader>e :e $MYVIMRC<cr>
+nnoremap <leader>E :e $MYVIMRC<cr>
 nnoremap <leader>R :so $MYVIMRC<cr>
 nmap <leader>S :Starify<cr>
 
@@ -68,10 +69,9 @@ nmap <silent> gy <Plug>(coc-type-definition)
 nmap <silent> gi <Plug>(coc-implementation)
 nmap <silent> gr <Plug>(coc-references)
 nmap <silent> <leader>R <Plug>(coc-rename)
-nmap <silent> <leader>E :CocList diagnostics<cr>
+nmap <silent> <leader>D :CocList diagnostics<cr>
 nmap <silent> <leader>a :CocCommand clangd.switchSourceHeader<cr>
 
-autocmd BufReadPost quickfix nnoremap <buffer> <CR> <CR>
 nnoremap <silent> <Leader>sc :nohlsearch<CR>
 
 " === Plugs ===
@@ -126,15 +126,14 @@ Plug 'vim-scripts/matchit.zip'
 Plug 'ervandew/supertab'
 Plug 'raimondi/delimitmate'
 Plug 'gelguy/wilder.nvim'
-Plug 'roxma/nvim-yarp', { 'do': 'pip install -r requirements.txt' }
-Plug 'roxma/vim-hug-neovim-rpc'
+"Plug 'roxma/nvim-yarp', { 'do': 'pip install -r requirements.txt' }
+"Plug 'roxma/vim-hug-neovim-rpc'
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => Code display
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-Plug 'frazrepo/vim-rainbow'
+"Plug 'frazrepo/vim-rainbow'
 "Plug 'itchyny/vim-cursorword'
 Plug 'lifepillar/vim-gruvbox8'
-Plug 'morhetz/gruvbox'
 Plug 'lifepillar/vim-solarized8'
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -149,13 +148,11 @@ Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
 Plug 'junegunn/fzf.vim'
 " tagbar enhancement
 Plug 'liuchengxu/vista.vim'
-"Plug 'troydm/easytree.vim'
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => Interface
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 Plug 'mhinz/vim-startify'
-" Plug 'skywind3000/vim-quickui'
 " peek register
 Plug 'junegunn/vim-peekaboo'
 Plug 'chenzhihuai/vim-buftabline'
@@ -179,6 +176,8 @@ Plug 'm1foley/vim-expresso'
 Plug 'tommcdo/vim-exchange'
 "gr grr
 Plug 'vim-scripts/ReplaceWithRegister'
+"close file without close window
+Plug 'moll/vim-bbye'
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 call plug#end()
 
