@@ -184,13 +184,24 @@ call plug#end()
 " === Plug Configs ===
 
 if has_key(g:plugs, 'wilder.nvim')
-    call wilder#setup({ 'modes': [':', '/', '?'], })
-    " 'highlighter' : applies highlighting to the candidates
-    call wilder#set_option('renderer', wilder#popupmenu_renderer({
+    call wilder#setup({'modes': [':', '/', '?']})
+
+    call wilder#set_option('pipeline', [
+                \   wilder#branch(
+                \     wilder#cmdline_pipeline(),
+                \     wilder#search_pipeline(),
+                \   ),
+                \ ])
+
+    call wilder#set_option('renderer', wilder#wildmenu_renderer({
                 \ 'highlighter': wilder#basic_highlighter(),
-                \ 'pumblend': 20,
-                \ 'border': 'rounded'
                 \ }))
+    call wilder#set_option('renderer', wilder#popupmenu_renderer(wilder#popupmenu_border_theme({
+                \ 'highlights': {
+                    \   'border': 'Normal',
+                    \ },
+                    \ 'border': 'rounded',
+                    \ })))
 endif
 if has_key(g:plugs, 'coc.nvim')
     inoremap <silent><expr> <TAB>
