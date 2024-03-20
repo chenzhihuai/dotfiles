@@ -21,13 +21,10 @@ nnoremap <c-l> <c-w>l
 nnoremap <c-k> <c-w>k
 nnoremap <c-h> <c-w>h
 
-" no cursor motion while *-search
-"nnoremap * *N
 " align entire buffer
 nnoremap =a gg=G''
 " save session and quit
 nnoremap zz :mks!<cr>:wqa!<cr>
-nnoremap <leader>q :qa!<cr>
 
 " buffers
 nnoremap <leader>bn :bn<cr>
@@ -35,6 +32,7 @@ nnoremap <leader>bp :bp<cr>
 nnoremap <leader>bd :bd<cr>
 nnoremap <leader>e :e .<cr>
 nnoremap Q :Bdelete<cr>
+nnoremap <leader>q :clo<cr>
 
 
 " jump
@@ -73,6 +71,7 @@ nmap <silent> <leader>D :CocList diagnostics<cr>
 nmap <silent> <leader>a :CocCommand clangd.switchSourceHeader<cr>
 
 nnoremap <silent> <Leader>sc :nohlsearch<CR>
+nnoremap <silent> <Leader>tp :setlocal paste!<CR>
 
 " === Plugs ===
 " Install vim-plug if not found
@@ -101,7 +100,8 @@ call plug#begin($VIMHOME. '/plugged')
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => Basic Setting
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-Plug 'chenzhihuai/vim-better-default'
+Plug 'chenzhihuai/vim-default-improved'
+Plug 'noscript/elevator.vim'
 Plug 'farmergreg/vim-lastplace'
 Plug 'kana/vim-smartword'
 Plug 'machakann/vim-highlightedyank'
@@ -148,6 +148,7 @@ Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
 Plug 'junegunn/fzf.vim'
 " tagbar enhancement
 Plug 'liuchengxu/vista.vim'
+Plug 'scrooloose/nerdtree'
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => Interface
@@ -178,6 +179,8 @@ Plug 'tommcdo/vim-exchange'
 Plug 'vim-scripts/ReplaceWithRegister'
 "close file without close window
 Plug 'moll/vim-bbye'
+" resize font via ^= ^- and ^mouse
+Plug 'eggbean/resize-font.gvim'
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 call plug#end()
 
@@ -235,15 +238,6 @@ if has_key(g:plugs, 'coc.nvim')
     omap af <Plug>(coc-funcobj-a)
 endif
 
-if has_key(g:plugs, 'vim-better-default')
-    let g:vim_better_default_minimum            = 0
-    let g:vim_better_default_backup_on          = 0
-    let g:vim_better_default_persistent_undo    = 1
-    let g:vim_better_default_enable_folding     = 1
-    let g:vim_better_default_key_mapping        = 0
-    runtime! plugin/default.vim
-endif
-
 if has_key(g:plugs, 'vimspector')
     let g:vimspector_enable_mappings = 'VISUAL_STUDIO'
     let g:vimspector_base_dir=expand('~/.vim/.vimspectorjson')
@@ -294,13 +288,8 @@ endif
 
 " === Patches ===
 " split vertically by default
-autocmd WinNew * wincmd L
 let g:EasyMotion_smartcase = 1
 let g:EasyMotion_do_mapping=0
-"set splitright
-"set noincsearch
-"set nocursorline
-"set cmdheight=1
 set background=dark
 let g:gruvbox_plugin_hi_groups=1
 colorscheme gruvbox8
