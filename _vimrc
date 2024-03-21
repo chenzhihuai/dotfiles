@@ -4,18 +4,6 @@
 "=== Keymap ===
 
 let g:mapleader=' '
-" everyone should agree
-" yank to eol
-nnoremap Y y$
-vnoremap < <gv
-vnoremap > >gv
-nmap j gj
-nmap k gk
-vmap j gj
-vmap k gk
-imap <c-backspace> <c-w>
-nnoremap H ^
-nnoremap L $
 nnoremap <c-j> <c-w>j
 nnoremap <c-l> <c-w>l
 nnoremap <c-k> <c-w>k
@@ -33,7 +21,6 @@ nnoremap <leader>bd :bd<cr>
 nnoremap <leader>e :e .<cr>
 nnoremap Q :Bdelete<cr>
 nnoremap <leader>q :clo<cr>
-
 
 " jump
 map <leader><space> <plug>(easymotion-bd-f)
@@ -101,7 +88,9 @@ call plug#begin($VIMHOME. '/plugged')
 " => Basic Setting
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 Plug 'chenzhihuai/vim-default-improved'
-Plug 'noscript/elevator.vim'
+if has(version >= 900)
+    Plug 'noscript/elevator.vim'
+endif
 Plug 'farmergreg/vim-lastplace'
 Plug 'kana/vim-smartword'
 Plug 'machakann/vim-highlightedyank'
@@ -315,3 +304,8 @@ if has('win64') || has('win32')
     let g:python3_host_prog="C:\\Users\\chenz\\AppData\\Local\\Programs\\Python\\Python312\\python.exe"
 endif
 
+let g:fzf_action = {
+    \ 'ctrl-q': 'wall | bdelete',
+    \ 'ctrl-t': 'tab split',
+    \ 'ctrl-x': 'split',
+    \ 'ctrl-v': 'vsplit' }
