@@ -150,6 +150,7 @@ Plug 'chenzhihuai/vim-statline'
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => Commands
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+Plug 'skywind3000/asyncrun.vim'
 Plug 'easymotion/vim-easymotion'
 "Plug 'justinmk/vim-sneak'
 "cs ds ys and v_S
