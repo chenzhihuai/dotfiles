@@ -1,6 +1,24 @@
-"=== Helper ===
-" ctrl-w } : open tag in preview window
-" zz save session and quit
+"=== Key Binding ===
+" ctrl-w }  : open tag in preview window
+" zz        : save session and quit
+" <space>be : openbufexplorer
+" Q         : del buffer without close window
+" <space>q  : close window
+" g{num}    : focus on window <num>
+" <space>bn : buf next
+" ]b        : buf next
+" <space>bp : buf previous
+" [b        : buf previous
+" <space>bd : buf delete
+" <space>e  : file explorer
+" <space>F  : fzf files
+" <space>H  : fzf history
+" <space>B  : fzf buffers
+" @: or @;  : repeat last command
+" <leader>: : repeat last command
+"
+" gr or grr : replace with register
+" <c-down>  : multi-cursor 
 "=== Keymap ===
 
 let g:mapleader=' '
@@ -36,9 +54,11 @@ map g6 6<c-w>w
 
 command! W w !sudo tee % > /dev/null
 nnoremap <leader>cd :lcd %:p:h<cr>
+nnoremap <leader>: @:
+nnoremap <leader>; @:
 nnoremap <leader>E :e $MYVIMRC<cr>
-nnoremap <leader>R :so $MYVIMRC<cr>
-nmap <leader>S :Starify<cr>
+nnoremap <leader>T :so $MYVIMRC<cr>
+nmap <leader>S :Startify<cr>
 
 " fzf
 nmap <leader>H :History<cr>
@@ -53,6 +73,7 @@ nmap <silent> gd <Plug>(coc-definition)
 nmap <silent> gy <Plug>(coc-type-definition)
 nmap <silent> gi <Plug>(coc-implementation)
 nmap <silent> gr <Plug>(coc-references)
+nmap <silent> ga <Plug>(coc-codeaction-cursor)
 nmap <silent> <leader>R <Plug>(coc-rename)
 nmap <silent> <leader>D :CocList diagnostics<cr>
 nmap <silent> <leader>a :CocCommand clangd.switchSourceHeader<cr>
@@ -104,15 +125,12 @@ Plug 'haya14busa/vim-asterisk'
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 Plug 'scrooloose/nerdcommenter'
 Plug 'vim-scripts/matchit.zip'
-"Plug 'alvan/vim-closetag'
-"Plug 'mattn/emmet-vim'
-"Plug 'valloric/matchtagalways'
 "Plug 'puremourning/vimspector'
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => Completion
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-"Plug 'neoclide/coc.nvim', {'branch': 'release'}
-Plug 'ervandew/supertab'
+Plug 'neoclide/coc.nvim', {'branch': 'release'}
+"Plug 'ervandew/supertab'
 Plug 'raimondi/delimitmate'
 Plug 'gelguy/wilder.nvim'
 "Plug 'roxma/nvim-yarp', { 'do': 'pip install -r requirements.txt' }
@@ -120,8 +138,6 @@ Plug 'gelguy/wilder.nvim'
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => Code display
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-"Plug 'frazrepo/vim-rainbow'
-"Plug 'itchyny/vim-cursorword'
 Plug 'lifepillar/vim-gruvbox8'
 Plug 'lifepillar/vim-solarized8'
 
@@ -129,15 +145,16 @@ Plug 'lifepillar/vim-solarized8'
 " => Integrations
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Git commands
-"Plug 'tpope/vim-fugitive'
-Plug 'mhinz/vim-signify'
-" Plug 'airblade/vim-gitgutter'
+Plug 'tpope/vim-fugitive'
+Plug 'airblade/vim-gitgutter'
 
 Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
 Plug 'junegunn/fzf.vim'
 " tagbar enhancement
 Plug 'liuchengxu/vista.vim'
 Plug 'scrooloose/nerdtree'
+Plug 'el-iot/buffer-tree'
+Plug 'jlanzarotta/bufexplorer'
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => Interface
@@ -150,7 +167,6 @@ Plug 'chenzhihuai/vim-statline'
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => Commands
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-Plug 'skywind3000/asyncrun.vim'
 Plug 'easymotion/vim-easymotion'
 "Plug 'justinmk/vim-sneak'
 "cs ds ys and v_S
@@ -246,7 +262,7 @@ endif
 
 if has_key(g:plugs, 'vim-buftabline')
 let g:buftabline_numbers=2
-let g:buftabline_separators=1
+let g:buftabline_separators=0
     nmap <leader>1 <Plug>BufTabLine.Go(1)
     nmap <leader>2 <Plug>BufTabLine.Go(2)
     nmap <leader>3 <Plug>BufTabLine.Go(3)
@@ -284,29 +300,31 @@ set background=dark
 let g:gruvbox_plugin_hi_groups=1
 colorscheme gruvbox8
 
-let g:rainbow_active = 1
-
-let g:rainbow_load_separately = [
-    \ [ '*' , [['(', ')'], ['\[', '\]'], ['{', '}']] ],
-    \ [ '*.tex' , [['(', ')'], ['\[', '\]']] ],
-    \ [ '*.cpp' , [['(', ')'], ['\[', '\]'], ['{', '}']] ],
-    \ [ '*.{html,htm}' , [['(', ')'], ['\[', '\]'], ['{', '}'], ['<\a[^>]*>', '</[^>]*>']] ],
-    \ ]
-
 if has("gui_running")
     set guifont=consolas:h11
     set lines=999 columns=999
-    "set titlestring=%F\ (PWD:\ %{substitute(getcwd(),\ $HOME,\ '~',\ '')})
-    set guioptions-=mT
 endif
+
+let g:fzf_preview_window = [] " close preview
+let g:fzf_layout = { 'window': { 'width': 0.9, 'height': 0.6, 'relative': v:true, 'yoffset': 1.0 } }
+
+let g:fzf_action = {
+    \ 'ctrl-q': 'wall | bdelete',
+    \ 'ctrl-x': 'split',
+    \ 'ctrl-v': 'vsplit' }
+
+unmenu PopUp
+nmenu PopUp.NerdTree <CMD>NERDTree<CR>
+nmenu PopUp.FindInTRee <CMD>NERDTreeFind<CR>
+nmenu PopUp.DiffThis <CMD>diffthis<CR>
+nmenu PopUp.CopyAll <CMD>%yank<CR>
+nmenu PopUp.ReplaceAll ggvGp
+nmenu PopUp.CopyLine ^y$
+nmenu PopUp.Close <CMD>close<CR>
 
 " wilder.nvim
 if has('win64') || has('win32')
     let g:python3_host_prog="C:\\Users\\chenz\\AppData\\Local\\Programs\\Python\\Python312\\python.exe"
 endif
 
-let g:fzf_action = {
-    \ 'ctrl-q': 'wall | bdelete',
-    \ 'ctrl-t': 'tab split',
-    \ 'ctrl-x': 'split',
-    \ 'ctrl-v': 'vsplit' }
+nmap gb :call wilder#disable()<cr>:BufferTree<cr>:buffer<space>
