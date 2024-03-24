@@ -27,24 +27,18 @@ nnoremap <c-l> <c-w>l
 nnoremap <c-k> <c-w>k
 nnoremap <c-h> <c-w>h
 
-" align entire buffer
-nnoremap =a gg=G''
-" save session and quit
-nnoremap zz :mks!<cr>:wqa!<cr>
 
 " buffers
 nnoremap <leader>bn :bn<cr>
 nnoremap <leader>bp :bp<cr>
 nnoremap <leader>bd :bd<cr>
-nnoremap <leader>e :e .<cr>
-nnoremap Q :Bdelete<cr>
-nnoremap <leader>q :clo<cr>
+nnoremap <leader>e  :e .<cr>
+nnoremap Q          :Bdelete<cr>
+nnoremap <leader>q  :clo<cr>
 
 " jump
 map <leader><space> <plug>(easymotion-bd-f)
-"nmap s <plug>(easymotion-s2)
-"map <Leader>; <Plug>(easymotion-next)
-"map <Leader>, <Plug>(easymotion-prev)
+
 map g1 1<c-w>w
 map g2 2<c-w>w
 map g3 3<c-w>w
@@ -54,7 +48,7 @@ map g6 6<c-w>w
 
 command! W w !sudo tee % > /dev/null
 nnoremap <leader>cd :lcd %:p:h<cr>
-nnoremap <leader>: @:
+nnoremap <leader>: :History:<CR>
 nnoremap <leader>; @:
 nnoremap <leader>E :e $MYVIMRC<cr>
 nnoremap <leader>T :so $MYVIMRC<cr>
@@ -78,6 +72,10 @@ nmap <silent> <leader>R <Plug>(coc-rename)
 nmap <silent> <leader>D :CocList diagnostics<cr>
 nmap <silent> <leader>a :CocCommand clangd.switchSourceHeader<cr>
 
+" align entire buffer
+nnoremap =a gg=G''
+" save session and quit
+nnoremap zz :mks!<cr>:wqa!<cr>
 nnoremap <silent> <Leader>sc :nohlsearch<CR>
 nnoremap <silent> <Leader>tp :setlocal paste!<CR>
 
@@ -109,7 +107,7 @@ call plug#begin($VIMHOME. '/plugged')
 " => Basic Setting
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 Plug 'chenzhihuai/vim-default-improved'
-if has(version >= 900)
+if version >= 900
     Plug 'noscript/elevator.vim'
 endif
 Plug 'farmergreg/vim-lastplace'
@@ -163,7 +161,8 @@ Plug 'mhinz/vim-startify'
 " peek register
 Plug 'junegunn/vim-peekaboo'
 Plug 'chenzhihuai/vim-buftabline'
-Plug 'chenzhihuai/vim-statline'
+"Plug 'chenzhihuai/vim-statline'
+Plug 'chenzhihuai/vim-simpline'
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => Commands
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -327,4 +326,3 @@ if has('win64') || has('win32')
     let g:python3_host_prog="C:\\Users\\chenz\\AppData\\Local\\Programs\\Python\\Python312\\python.exe"
 endif
 
-nmap gb :call wilder#disable()<cr>:BufferTree<cr>:buffer<space>
