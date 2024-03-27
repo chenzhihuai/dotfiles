@@ -37,7 +37,8 @@ nnoremap Q          :Bdelete<cr>
 nnoremap <leader>q  :clo<cr>
 
 " jump
-map <leader><space> <plug>(easymotion-bd-f)
+map <leader>f <plug>(easymotion-bd-f)
+map <tab> <plug>(easymotion-bd-f)
 
 map g1 1<c-w>w
 map g2 2<c-w>w
@@ -66,7 +67,7 @@ nmap <silent> ]g <Plug>(coc-diagnostic-next)
 nmap <silent> gd <Plug>(coc-definition)
 nmap <silent> gy <Plug>(coc-type-definition)
 nmap <silent> gi <Plug>(coc-implementation)
-nmap <silent> gr <Plug>(coc-references)
+nmap <silent> gR <Plug>(coc-references)
 nmap <silent> ga <Plug>(coc-codeaction-cursor)
 nmap <silent> <leader>R <Plug>(coc-rename)
 nmap <silent> <leader>D :CocList diagnostics<cr>
@@ -111,18 +112,15 @@ if version >= 900
     Plug 'noscript/elevator.vim'
 endif
 Plug 'farmergreg/vim-lastplace'
-Plug 'kana/vim-smartword'
 Plug 'machakann/vim-highlightedyank'
-Plug 'wincent/terminus'
 " Enhance Search
-"Plug 'henrik/vim-indexed-search'
 " keep pos *-search
 Plug 'haya14busa/vim-asterisk'
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => Language
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 Plug 'scrooloose/nerdcommenter'
-Plug 'vim-scripts/matchit.zip'
+Plug 'vim-scripts/matchit.zip' "extend % to html and latex
 "Plug 'puremourning/vimspector'
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => Completion
@@ -137,7 +135,7 @@ Plug 'gelguy/wilder.nvim'
 " => Code display
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 Plug 'lifepillar/vim-gruvbox8'
-Plug 'lifepillar/vim-solarized8'
+Plug 'morhetz/gruvbox'
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => Integrations
@@ -151,8 +149,9 @@ Plug 'junegunn/fzf.vim'
 " tagbar enhancement
 Plug 'liuchengxu/vista.vim'
 Plug 'scrooloose/nerdtree'
-Plug 'el-iot/buffer-tree'
 Plug 'jlanzarotta/bufexplorer'
+Plug 'skywind3000/asyncrun.vim'
+
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => Interface
@@ -160,10 +159,11 @@ Plug 'jlanzarotta/bufexplorer'
 Plug 'mhinz/vim-startify'
 " peek register
 Plug 'junegunn/vim-peekaboo'
-Plug 'chenzhihuai/vim-buftabline'
-"Plug 'chenzhihuai/vim-statline'
-Plug 'chenzhihuai/vim-simpline'
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+Plug 'itchyny/lightline.vim'
+Plug 'mengelbrecht/lightline-bufferline'
+Plug 'ssh0/easyreading.vim'
+Plug 'albertomontesg/lightline-asyncrun'
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => Commands
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 Plug 'easymotion/vim-easymotion'
@@ -291,13 +291,156 @@ if has_key(g:plugs, 'vim-asterisk')
     let g:asterisk#keeppos = 1
 endif
 
+
+" wilder.nvim
+if has('win64') || has('win32')
+    let g:python3_host_prog="C:\\Users\\chenz\\AppData\\Local\\Programs\\Python\\Python312\\python.exe"
+endif
+
+if has_key(g:plugs, 'lightline.vim')
+    let g:lightline = {
+                \ 'colorscheme':'gruvbox',
+                \ 'active': {
+                \   'left': [ [ 'mode', 'paste' ], [ 'fugitive', 'filename' ] ],
+                \   'right': [ [ 'syntastic', 'lineinfo' ], ['percent'], [ 'fileformat', 'fileencoding', 'filetype' ] ]
+                \ },
+                \ 'inactive': {
+                \   'left': [ [ 'mode'], [ 'fugitive', 'filename' ] ],
+                \   'right': [ [ 'syntastic']]
+                \ },
+                \ 'tabline': {
+                \   'left': [ ['buffers'] ],
+                \   'right': [ ['close'] ]
+                \ },
+                \ 'component_function': {
+                \   'fugitive': 'LightlineFugitive',
+                \   'filename': 'LightlineFilename',
+                \   'fileformat': 'LightlineFileformat',
+                \   'filetype': 'LightlineFiletype',
+                \   'fileencoding': 'LightlineFileencoding',
+                \   'mode': 'LightlineMode',
+                \   'bufferinfo': 'lightline#buffer#bufferinfo',
+                \   'lineinfo': 'LightlineLineinfo',
+                \   'percent': 'LightLinePercent',
+                \ },
+                \ 'component_expand': {
+                \   'syntastic': 'SyntasticStatuslineFlag',
+                \   'asyncrun_status': 'lightline#asyncrun#status',
+                \   'buffers': 'lightline#bufferline#buffers',
+                \ },
+                \ 'component_type': {
+                \   'syntastic': 'error',
+                \   'buffers': 'tabsel'
+                \ },
+                \ 'subseparator': { 'left': '|', 'right': '|' }
+                \ }
+
+    function! LightlineLineinfo() abort
+        if winwidth(0) < 86
+            return ''
+        endif
+
+        let l:current_line = printf('%-3s', line('.'))
+        let l:current_column = printf('%-2s', col('.'))
+        let l:lineinfo = '' . l:current_line . ':' . l:current_column
+        return l:lineinfo
+    endfunction
+
+    function! LightlineModified()
+        return &ft ==# 'help' ? '' : &modified ? '+' : &modifiable ? '' : '-'
+    endfunction
+
+    function! LightlineReadonly()
+        return &ft !~? 'help' && &readonly ? 'RO' : ''
+    endfunction
+
+    function! LightlineFilename()
+        let fname = expand('%:t')
+        return fname =~ 'NERD_tree' ? b:NERDTree.root.path.str():
+                    \ (LightlineReadonly() !=# '' ? LightlineReadonly() . ' ' : '') .
+                    \ (fname !=# '' ? fname : '[No Name]') .
+                    \ (LightlineModified() !=# '' ? ' ' . LightlineModified() : '')
+    endfunction
+
+    function! LightlineFugitive()
+        try
+            if expand('%:t') !~? 'Tagbar\|Gundo\|NERD' && &ft !~? 'vimfiler' && exists('*FugitiveHead')
+                let mark = ''  " edit here for cool mark
+                let branch = FugitiveHead()
+                return branch !=# '' ? mark.branch : ''
+            endif
+        catch
+        endtry
+        return ''
+    endfunction
+
+    function! LightlineFileformat()
+        return winwidth(0) > 70 ? &fileformat : ''
+    endfunction
+
+    function! LightlineFiletype()
+        return winwidth(0) > 70 ? (&filetype !=# '' ? &filetype : 'no ft') : ''
+    endfunction
+
+    function! LightlineFileencoding()
+        return winwidth(0) > 70 ? (&fenc !=# '' ? &fenc : &enc) : ''
+    endfunction
+
+    function! LightlineMode()
+        return '[#'.winnr().']'
+    endfunction
+
+
+    function! LightLinePercent()
+      return winwidth(0) > 70 ? '' : (100 * line('.') / line('$')) . '%'
+    endfunction
+
+    function! NearestFunctionOrMethod() abort
+        return get(b:, 'vista_nearest_function_or_method':'')
+    endfunction
+
+    " Syntastic can call a post-check hook, let's update lightline there
+    " For more information: :help syntastic-loclist-callback
+    function! SyntasticCheckHook(errors)
+        call lightline#update()
+    endfunction
+endif
+
+if has_key(g:plugs, 'lightline-bufferline')
+    set showtabline=2
+    nmap <Leader>1 <Plug>lightline#bufferline#go(1)
+    nmap <Leader>2 <Plug>lightline#bufferline#go(2)
+    nmap <Leader>3 <Plug>lightline#bufferline#go(3)
+    nmap <Leader>4 <Plug>lightline#bufferline#go(4)
+    nmap <Leader>5 <Plug>lightline#bufferline#go(5)
+    nmap <Leader>6 <Plug>lightline#bufferline#go(6)
+    nmap <Leader>7 <Plug>lightline#bufferline#go(7)
+    nmap <Leader>8 <Plug>lightline#bufferline#go(8)
+    nmap <Leader>9 <Plug>lightline#bufferline#go(9)
+    nmap <Leader>0 <Plug>lightline#bufferline#go(10)
+
+    nmap <Tab>   <Plug>lightline#bufferline#go_next()
+    nmap <S-Tab> <Plug>lightline#bufferline#go_previous()
+    nmap <Leader><Tab>   <Plug>lightline#bufferline#go_next_category()
+    nmap <Leader><S-Tab> <Plug>lightline#bufferline#go_previous_category()
+
+    nmap <Leader>bl <Plug>lightline#bufferline#move_next()
+    nmap <Leader>bh <Plug>lightline#bufferline#move_previous()
+    nmap <Leader>bk <Plug>lightline#bufferline#move_first()
+    nmap <Leader>bj <Plug>lightline#bufferline#move_last()
+    nmap <Leader>bb <Plug>lightline#bufferline#reset_order()
+
+    nmap <Leader>c1 <Plug>lightline#bufferline#delete(1)
+    let g:lightline#bufferline#show_number=2
+endif
+
 " === Patches ===
 " split vertically by default
 let g:EasyMotion_smartcase = 1
 let g:EasyMotion_do_mapping=0
 set background=dark
 let g:gruvbox_plugin_hi_groups=1
-colorscheme gruvbox8
+colorscheme gruvbox
 
 if has("gui_running")
     set guifont=consolas:h11
@@ -320,9 +463,4 @@ nmenu PopUp.CopyAll <CMD>%yank<CR>
 nmenu PopUp.ReplaceAll ggvGp
 nmenu PopUp.CopyLine ^y$
 nmenu PopUp.Close <CMD>close<CR>
-
-" wilder.nvim
-if has('win64') || has('win32')
-    let g:python3_host_prog="C:\\Users\\chenz\\AppData\\Local\\Programs\\Python\\Python312\\python.exe"
-endif
-
+nmap <c-g> <cmd>echo expand('%:p') strftime('modified at %Y/%m/%d %H:%M:%S', getftime(expand('%:p'))) '(CWD:' getcwd()')'<cr>
