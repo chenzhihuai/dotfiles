@@ -19,7 +19,10 @@
 "
 " gr or grr : replace with register
 " <c-down>  : multi-cursor 
-"=== Keymap ===
+"=== Helper ===
+":vimgrep /{pattern}/[g][j][f] {file}
+":grep {pattern} {file}
+":make
 
 let g:mapleader=' '
 nnoremap <c-j> <c-w>j
@@ -150,6 +153,7 @@ Plug 'junegunn/fzf.vim'
 Plug 'liuchengxu/vista.vim'
 Plug 'scrooloose/nerdtree'
 Plug 'jlanzarotta/bufexplorer'
+"Plug 'nicwest/bnext.vim'
 Plug 'skywind3000/asyncrun.vim'
 
 
@@ -259,42 +263,19 @@ if has_key(g:plugs, 'vimspector')
     noremap <leader>db :tabe .vimspector.json<CR>:LoadVimSpectorJsonTemplate<CR>
 endif
 
-if has_key(g:plugs, 'vim-buftabline')
-let g:buftabline_numbers=2
-let g:buftabline_separators=0
-    nmap <leader>1 <Plug>BufTabLine.Go(1)
-    nmap <leader>2 <Plug>BufTabLine.Go(2)
-    nmap <leader>3 <Plug>BufTabLine.Go(3)
-    nmap <leader>4 <Plug>BufTabLine.Go(4)
-    nmap <leader>5 <Plug>BufTabLine.Go(5)
-    nmap <leader>6 <Plug>BufTabLine.Go(6)
-    nmap <leader>7 <Plug>BufTabLine.Go(7)
-    nmap <leader>8 <Plug>BufTabLine.Go(8)
-    nmap <leader>9 <Plug>BufTabLine.Go(9)
-    nmap <leader>0 <Plug>BufTabLine.Go(10)
-endif
 if has_key(g:plugs, 'fzf.vim')
-    if has('win32')
-        let g:fzf_preview_window=[]
-    endif
+    let g:fzf_preview_window = [] " close preview
+    let g:fzf_layout = { 'window': { 'width': 0.9, 'height': 0.6, 'relative': v:true, 'yoffset': 1.0 } }
+
+    let g:fzf_action = {
+        \ 'ctrl-q': 'wall | bdelete',
+        \ 'ctrl-x': 'split',
+        \ 'ctrl-v': 'vsplit' }
+
     let g:fzf_history_dir = '~/.local/share/fzf-history'
-    let g:fzf_preview_bash = 'C:\Program Files\Git\bin\bash.exe'
-endif
-if has_key(g:plugs, 'vim-sandwich')
-    runtime macros/sandwich/keymap/surround.vim
-endif
-if has_key(g:plugs, 'vim-asterisk')
-    map *  <Plug>(asterisk-z*)
-    map #  <Plug>(asterisk-z#)
-    map g* <Plug>(asterisk-gz*)
-    map g# <Plug>(asterisk-gz#)
-    let g:asterisk#keeppos = 1
-endif
-
-
-" wilder.nvim
-if has('win64') || has('win32')
-    let g:python3_host_prog="C:\\Users\\chenz\\AppData\\Local\\Programs\\Python\\Python312\\python.exe"
+    if has('win32') || has('win64')
+        let g:fzf_preview_bash = 'C:\Program Files\Git\bin\bash.exe'
+    endif
 endif
 
 if has_key(g:plugs, 'lightline.vim')
@@ -392,7 +373,7 @@ if has_key(g:plugs, 'lightline.vim')
 
 
     function! LightLinePercent()
-      return winwidth(0) > 70 ? '' : (100 * line('.') / line('$')) . '%'
+      return winwidth(0) < 70 ? '' : (100 * line('.') / line('$')) . '%'
     endfunction
 
     function! NearestFunctionOrMethod() abort
@@ -434,6 +415,17 @@ if has_key(g:plugs, 'lightline-bufferline')
     let g:lightline#bufferline#show_number=2
 endif
 
+if has_key(g:plugs, 'vim-sandwich')
+    runtime macros/sandwich/keymap/surround.vim
+endif
+if has_key(g:plugs, 'vim-asterisk')
+    map *  <Plug>(asterisk-z*)
+    map #  <Plug>(asterisk-z#)
+    map g* <Plug>(asterisk-gz*)
+    map g# <Plug>(asterisk-gz#)
+    let g:asterisk#keeppos = 1
+endif
+
 " === Patches ===
 " split vertically by default
 let g:EasyMotion_smartcase = 1
@@ -442,18 +434,14 @@ set background=dark
 let g:gruvbox_plugin_hi_groups=1
 colorscheme gruvbox
 
+" wilder.nvim
+if has('win64') || has('win32')
+    let g:python3_host_prog="C:\\Users\\chenz\\AppData\\Local\\Programs\\Python\\Python312\\python.exe"
+endif
 if has("gui_running")
     set guifont=consolas:h11
     set lines=999 columns=999
 endif
-
-let g:fzf_preview_window = [] " close preview
-let g:fzf_layout = { 'window': { 'width': 0.9, 'height': 0.6, 'relative': v:true, 'yoffset': 1.0 } }
-
-let g:fzf_action = {
-    \ 'ctrl-q': 'wall | bdelete',
-    \ 'ctrl-x': 'split',
-    \ 'ctrl-v': 'vsplit' }
 
 unmenu PopUp
 nmenu PopUp.NerdTree <CMD>NERDTree<CR>
@@ -464,3 +452,14 @@ nmenu PopUp.ReplaceAll ggvGp
 nmenu PopUp.CopyLine ^y$
 nmenu PopUp.Close <CMD>close<CR>
 nmap <c-g> <cmd>echo expand('%:p') strftime('modified at %Y/%m/%d %H:%M:%S', getftime(expand('%:p'))) '(CWD:' getcwd()')'<cr>
+
+"nmap <leader>bs :call BufSel()<cr>
+
+command -nargs=? -bang Buffer if <q-args> != '' | exe 'buffer '.<q-args> | else | ls<bang> | let buffer_nn=input('Which one: ') | if buffer_nn != '' | exe buffer_nn != 0 ? 'buffer '.buffer_nn : 'enew' | endif | endif
+let g:SuperTabDefaultCompletionType = "context"
+
+"" Include user's local vim config
+if filereadable(expand("~/.vimrc.local"))
+  source ~/.vimrc.local
+endif
+
