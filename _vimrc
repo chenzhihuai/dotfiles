@@ -86,13 +86,7 @@ nnoremap <silent> <Leader>tp :setlocal paste!<CR>
 " === Plugs ===
 " Install vim-plug if not found
 if !exists('$VIMHOME')
-    if has('nvim')
-        let $VIMHOME=stdpath('data')
-    elseif has('win32') || has ('win64')
-        let $VIMHOME=$HOME.'/vimfiles'
-    else
-        let $VIMHOME=$HOME.'/.vim'
-    endif
+    let $VIMHOME=has('nvim') ? stdpath('data') : has('linux') ? $HOME.'/.vim' : $HOME.'/vimfiles'
 endif
 if empty(glob($VIMHOME. '/autoload/plug.vim'))
     silent execute '!curl -fLo '.$VIMHOME.'/autoload/plug.vim --create-dirs  https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim'
@@ -131,7 +125,7 @@ Plug 'vim-scripts/matchit.zip' "extend % to html and latex
 Plug 'neoclide/coc.nvim', {'branch': 'release'}
 "Plug 'ervandew/supertab'
 Plug 'raimondi/delimitmate'
-Plug 'gelguy/wilder.nvim'
+"Plug 'gelguy/wilder.nvim'
 "Plug 'roxma/nvim-yarp', { 'do': 'pip install -r requirements.txt' }
 "Plug 'roxma/vim-hug-neovim-rpc'
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -165,7 +159,6 @@ Plug 'mhinz/vim-startify'
 Plug 'junegunn/vim-peekaboo'
 Plug 'itchyny/lightline.vim'
 Plug 'mengelbrecht/lightline-bufferline'
-Plug 'ssh0/easyreading.vim'
 Plug 'albertomontesg/lightline-asyncrun'
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => Commands
@@ -387,8 +380,8 @@ if has_key(g:plugs, 'lightline.vim')
     endfunction
 endif
 
-if has_key(g:plugs, 'lightline-bufferline')
     set showtabline=2
+if has_key(g:plugs, 'lightline-bufferline')
     nmap <Leader>1 <Plug>lightline#bufferline#go(1)
     nmap <Leader>2 <Plug>lightline#bufferline#go(2)
     nmap <Leader>3 <Plug>lightline#bufferline#go(3)
@@ -413,6 +406,10 @@ if has_key(g:plugs, 'lightline-bufferline')
 
     nmap <Leader>c1 <Plug>lightline#bufferline#delete(1)
     let g:lightline#bufferline#show_number=2
+    if has('tablineat')
+        let g:lightline#bufferline#clickable=1
+        let g:lightline.component_raw = {'buffers': 1}
+    end
 endif
 
 if has_key(g:plugs, 'vim-sandwich')
