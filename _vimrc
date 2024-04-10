@@ -51,7 +51,7 @@ map g5 5<c-w>w
 map g6 6<c-w>w
 
 command! W w !sudo tee % > /dev/null
-nnoremap <leader>cd :lcd %:p:h<cr>
+nnoremap <leader>cd :lcd %:p:h<cr>:pwd<cr>
 nnoremap <leader>: :History:<CR>
 nnoremap <leader>; @:
 nnoremap <leader>E :e $MYVIMRC<cr>
@@ -108,7 +108,7 @@ Plug 'chenzhihuai/vim-default-improved'
 if version >= 900
     Plug 'noscript/elevator.vim'
 endif
-Plug 'farmergreg/vim-lastplace'
+"Plug 'farmergreg/vim-lastplace'
 Plug 'machakann/vim-highlightedyank'
 " Enhance Search
 " keep pos *-search
@@ -460,3 +460,29 @@ if filereadable(expand("~/.vimrc.local"))
   source ~/.vimrc.local
 endif
 
+command! Build :call CompileRun()<CR>
+
+func! CompileRun()
+    exec "w"
+    if &filetype == 'c'
+        exec "!gcc % -o %<"
+        exec "!time ./%<"
+    elseif &filetype == 'cpp'
+        exec "!g++ % -o %<"
+        exec "!time ./%<"
+    elseif &filetype == 'java'
+        exec "!javac %"
+        exec "!time java %"
+    elseif &filetype == 'sh'
+        exec "!time bash %"
+    elseif &filetype == 'python'
+        exec "!time python3 %"
+    elseif &filetype == 'html'
+        exec "!google-chrome % &"
+    elseif &filetype == 'go'
+        exec "!go build %<"
+        exec "!time go run %"
+    elseif &filetype == 'matlab'
+        exec "!time octave %"
+    endif
+endfunc
