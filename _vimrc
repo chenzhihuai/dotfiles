@@ -23,6 +23,10 @@
 ":vimgrep /{pattern}/[g][j][f] {file}
 ":grep {pattern} {file}
 ":make
+":s/pattern/(&) # surround with ()
+":g_ctrl-a # increase columns numbers sequentially
+"register "0 = recently yanked text
+"register "- = recently deletion
 
 let g:mapleader=' '
 nnoremap <c-j> <c-w>j
@@ -171,14 +175,8 @@ Plug 'machakann/vim-sandwich'
 Plug 'godlygeek/tabular'
 "<c-n> n N q Q [ ] <c-down>
 Plug 'mg979/vim-visual-multi'
-"<c-v> then <c-a> or <c-x> to increase/descrease numbers
-Plug 'triglav/vim-visual-increment'
 "eval expression with g= g== g=
 Plug 'm1foley/vim-expresso'
-"cxiw
-Plug 'tommcdo/vim-exchange'
-"gr grr
-Plug 'vim-scripts/ReplaceWithRegister'
 "close file without close window
 Plug 'moll/vim-bbye'
 " resize font via ^= ^- and ^mouse
