@@ -1,4 +1,4 @@
-"=== Key Binding ===
+"=== Key Binding === {{{
 " ctrl-w }  : open tag in preview window
 " zz        : save session and quit
 " <space>be : openbufexplorer
@@ -29,11 +29,6 @@
 "register "- = recently deletion
 
 let g:mapleader=' '
-nnoremap <c-j> <c-w>j
-nnoremap <c-l> <c-w>l
-nnoremap <c-k> <c-w>k
-nnoremap <c-h> <c-w>h
-
 
 " buffers
 nnoremap <leader>bn :bn<cr>
@@ -57,7 +52,6 @@ map g6 6<c-w>w
 command! W w !sudo tee % > /dev/null
 nnoremap <leader>cd :lcd %:p:h<cr>:pwd<cr>
 nnoremap <leader>: :History:<CR>
-nnoremap <leader>; @:
 nnoremap <leader>E :e $MYVIMRC<cr>
 nnoremap <leader>T :so $MYVIMRC<cr>
 nmap <leader>S :Startify<cr>
@@ -65,7 +59,6 @@ nmap <leader>S :Startify<cr>
 " fzf
 nmap <leader>H :History<cr>
 nmap <leader>F :Files<cr>
-nmap <leader>B :Buffers<cr>
 nmap <leader>rg :Rg<cr>
 
 " coc
@@ -81,13 +74,11 @@ nmap <silent> <leader>D :CocList diagnostics<cr>
 nmap <silent> <leader>a :CocCommand clangd.switchSourceHeader<cr>
 
 " align entire buffer
-nnoremap =a gg=G''
-" save session and quit
-nnoremap zz :mks!<cr>:wqa!<cr>
 nnoremap <silent> <Leader>sc :nohlsearch<CR>
 nnoremap <silent> <Leader>tp :setlocal paste!<CR>
+" }}}
 
-" === Plugs ===
+" === Plugs === {{{
 " Install vim-plug if not found
 if !exists('$VIMHOME')
     let $VIMHOME=has('nvim') ? stdpath('data') : has('linux') ? $HOME.'/.vim' : $HOME.'/vimfiles'
@@ -112,30 +103,21 @@ Plug 'chenzhihuai/vim-default-improved'
 if version >= 900
     Plug 'noscript/elevator.vim'
 endif
-"Plug 'farmergreg/vim-lastplace'
 Plug 'machakann/vim-highlightedyank'
-" Enhance Search
-" keep pos *-search
-Plug 'haya14busa/vim-asterisk'
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => Language
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 Plug 'scrooloose/nerdcommenter'
-Plug 'vim-scripts/matchit.zip' "extend % to html and latex
 "Plug 'puremourning/vimspector'
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => Completion
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-Plug 'neoclide/coc.nvim', {'branch': 'release'}
-"Plug 'ervandew/supertab'
+"Plug 'neoclide/coc.nvim', {'branch': 'release'}
+Plug 'ervandew/supertab'
 Plug 'raimondi/delimitmate'
-"Plug 'gelguy/wilder.nvim'
-"Plug 'roxma/nvim-yarp', { 'do': 'pip install -r requirements.txt' }
-"Plug 'roxma/vim-hug-neovim-rpc'
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => Code display
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-Plug 'lifepillar/vim-gruvbox8'
 Plug 'morhetz/gruvbox'
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -151,7 +133,6 @@ Plug 'junegunn/fzf.vim'
 Plug 'liuchengxu/vista.vim'
 Plug 'scrooloose/nerdtree'
 Plug 'jlanzarotta/bufexplorer'
-"Plug 'nicwest/bnext.vim'
 Plug 'skywind3000/asyncrun.vim'
 
 
@@ -176,15 +157,14 @@ Plug 'godlygeek/tabular'
 "<c-n> n N q Q [ ] <c-down>
 Plug 'mg979/vim-visual-multi'
 "eval expression with g= g== g=
-Plug 'm1foley/vim-expresso'
-"close file without close window
 Plug 'moll/vim-bbye'
 " resize font via ^= ^- and ^mouse
 Plug 'eggbean/resize-font.gvim'
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 call plug#end()
+"}}}
 
-" === Plug Configs ===
+" === Plug Configs === {{{
 
 if has_key(g:plugs, 'wilder.nvim')
     call wilder#setup({'modes': [':', '/', '?']})
@@ -413,74 +393,12 @@ endif
 if has_key(g:plugs, 'vim-sandwich')
     runtime macros/sandwich/keymap/surround.vim
 endif
-if has_key(g:plugs, 'vim-asterisk')
-    map *  <Plug>(asterisk-z*)
-    map #  <Plug>(asterisk-z#)
-    map g* <Plug>(asterisk-gz*)
-    map g# <Plug>(asterisk-gz#)
-    let g:asterisk#keeppos = 1
-endif
 
-" === Patches ===
-" split vertically by default
-let g:EasyMotion_smartcase = 1
-let g:EasyMotion_do_mapping=0
-set background=dark
-let g:gruvbox_plugin_hi_groups=1
-colorscheme gruvbox
-
-" wilder.nvim
-if has('win64') || has('win32')
-    let g:python3_host_prog="C:\\Users\\chenz\\AppData\\Local\\Programs\\Python\\Python312\\python.exe"
-endif
-if has("gui_running")
-    set guifont=consolas:h11
-    set lines=999 columns=999
-endif
-
-unmenu PopUp
-nmenu PopUp.NerdTree <CMD>NERDTree<CR>
-nmenu PopUp.FindInTRee <CMD>NERDTreeFind<CR>
-nmenu PopUp.DiffThis <CMD>diffthis<CR>
-nmenu PopUp.CopyAll <CMD>%yank<CR>
-nmenu PopUp.ReplaceAll ggvGp
-nmenu PopUp.CopyLine ^y$
-nmenu PopUp.Close <CMD>close<CR>
-nmap <c-g> <cmd>echo expand('%:p') strftime('modified at %Y/%m/%d %H:%M:%S', getftime(expand('%:p'))) '(CWD:' getcwd()')'<cr>
-
-"nmap <leader>bs :call BufSel()<cr>
-
-command -nargs=? -bang Buffer if <q-args> != '' | exe 'buffer '.<q-args> | else | ls<bang> | let buffer_nn=input('Which one: ') | if buffer_nn != '' | exe buffer_nn != 0 ? 'buffer '.buffer_nn : 'enew' | endif | endif
-let g:SuperTabDefaultCompletionType = "context"
-
+"}}}
+"
 "" Include user's local vim config
 if filereadable(expand("~/.vimrc.local"))
   source ~/.vimrc.local
 endif
 
-command! Build :call CompileRun()<CR>
-
-func! CompileRun()
-    exec "w"
-    if &filetype == 'c'
-        exec "!gcc % -o %<"
-        exec "!time ./%<"
-    elseif &filetype == 'cpp'
-        exec "!g++ % -o %<"
-        exec "!time ./%<"
-    elseif &filetype == 'java'
-        exec "!javac %"
-        exec "!time java %"
-    elseif &filetype == 'sh'
-        exec "!time bash %"
-    elseif &filetype == 'python'
-        exec "!time python3 %"
-    elseif &filetype == 'html'
-        exec "!google-chrome % &"
-    elseif &filetype == 'go'
-        exec "!go build %<"
-        exec "!time go run %"
-    elseif &filetype == 'matlab'
-        exec "!time octave %"
-    endif
-endfunc
+" vim: fdm=marker fmr={{{,}}}
