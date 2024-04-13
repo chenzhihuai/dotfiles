@@ -59,4 +59,4 @@ let $LANG='en'
 set magic
 
 set termguicolors
-set modeline
+au! vimenter * set modeline

@@ -88,27 +88,16 @@ if empty(glob($VIMHOME. '/autoload/plug.vim'))
     autocmd VimEnter * PlugInstall --sync | source $MYVIMRC
 endif
 
-" Run PlugInstall if there are missing plugins
-autocmd VimEnter * if len(filter(values(g:plugs), '!isdirectory(v:val.dir)'))
-            \| PlugInstall --sync | source $MYVIMRC
-            \| endif
-
-
 call plug#begin($VIMHOME. '/plugged')
-
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => Basic Setting
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 Plug 'chenzhihuai/vim-default-improved'
+Plug 'pgdouyon/vim-evanesco'
 if version >= 900
     Plug 'noscript/elevator.vim'
 endif
 Plug 'machakann/vim-highlightedyank'
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" => Language
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-Plug 'scrooloose/nerdcommenter'
-"Plug 'puremourning/vimspector'
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => Completion
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -116,38 +105,30 @@ Plug 'scrooloose/nerdcommenter'
 Plug 'ervandew/supertab'
 Plug 'raimondi/delimitmate'
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" => Code display
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-Plug 'morhetz/gruvbox'
-
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => Integrations
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" Git commands
 Plug 'tpope/vim-fugitive'
 Plug 'airblade/vim-gitgutter'
-
 Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
 Plug 'junegunn/fzf.vim'
-" tagbar enhancement
 Plug 'liuchengxu/vista.vim'
 Plug 'scrooloose/nerdtree'
 Plug 'jlanzarotta/bufexplorer'
 Plug 'skywind3000/asyncrun.vim'
-
-
+"Plug 'puremourning/vimspector'
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => Interface
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 Plug 'mhinz/vim-startify'
-" peek register
 Plug 'junegunn/vim-peekaboo'
 Plug 'itchyny/lightline.vim'
 Plug 'mengelbrecht/lightline-bufferline'
 Plug 'albertomontesg/lightline-asyncrun'
+Plug 'morhetz/gruvbox'
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => Commands
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+Plug 'scrooloose/nerdcommenter'
 Plug 'easymotion/vim-easymotion'
 "Plug 'justinmk/vim-sneak'
 "cs ds ys and v_S
