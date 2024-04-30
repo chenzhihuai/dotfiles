@@ -112,8 +112,8 @@ Plug 'airblade/vim-gitgutter'
 Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
 Plug 'junegunn/fzf.vim'
 Plug 'liuchengxu/vista.vim'
-Plug 'jlanzarotta/bufexplorer'
 Plug 'scrooloose/nerdtree'
+Plug 'jlanzarotta/bufexplorer'
 Plug 'skywind3000/asyncrun.vim'
 "Plug 'puremourning/vimspector'
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -218,6 +218,11 @@ endif
 if has_key(g:plugs, 'fzf.vim')
     let g:fzf_preview_window = [] " close preview
     let g:fzf_layout = { 'window': { 'width': 0.9, 'height': 0.6, 'relative': v:true, 'yoffset': 1.0 } }
+
+    let g:fzf_action = {
+        \ 'ctrl-q': 'wall | bdelete',
+        \ 'ctrl-x': 'split',
+        \ 'ctrl-v': 'vsplit' }
 
     let g:fzf_history_dir = '~/.local/share/fzf-history'
     if has('win32') || has('win64')
@@ -334,7 +339,7 @@ if has_key(g:plugs, 'lightline.vim')
     endfunction
 endif
 
-set showtabline=2
+    set showtabline=2
 if has_key(g:plugs, 'lightline-bufferline')
     nmap <Leader>1 <Plug>lightline#bufferline#go(1)
     nmap <Leader>2 <Plug>lightline#bufferline#go(2)
