@@ -20,6 +20,7 @@ set autoindent
 set smarttab	
 set shiftwidth=4
 " wrap
+set nowrap
 set linebreak
 set breakindent
 " wildmenu
@@ -28,6 +29,8 @@ set wildoptions+=fuzzy
 set formatoptions+=jMm
 set shortmess-=S "show search index
 
+set noswapfile
+set autoread
 if has('persistent_undo')
   set undofile
   set undolevels=1000
@@ -39,20 +42,21 @@ nmap <space><space> :w<cr>:so %<cr>
 
 "}}}
 " vpack {{{
-"Pack 'noscript/elevator.vim'
-"Pack 'machakann/vim-highlightedyank'
-"Pack 'ervandew/supertab'
-"Pack 'scrooloose/nerdtree'
-"Pack 'skywind3000/asyncrun.vim'
-"Pack 'junegunn/vim-peekaboo'
-"Pack 'mg979/vim-visual-multi'
-"Pack 'moll/vim-bbye'
-"Pack 'scrooloose/nerdcommenter'
-"Pack 'godlygeek/tabular'
-"Pack 'liuchengxu/vista.vim'
-"Pack 'yegappan/mru'
-"Pack 'fholgado/minibufexpl.vim'
-"Pack 'jeetsukumaran/vim-buffergator'
+"cat a.vim | grep '^"pack .*/.*' | awk '{print $2}' | xargs -l echo vpack install
+"pack noscript/elevator.vim
+"pack machakann/vim-highlightedyank
+"pack ervandew/supertab
+"pack scrooloose/nerdtree
+"pack skywind3000/asyncrun.vim
+"pack junegunn/vim-peekaboo
+"pack mg979/vim-visual-multi
+"pack moll/vim-bbye
+"pack scrooloose/nerdcommenter
+"pack godlygeek/tabular
+"pack liuchengxu/vista.vim
+"pack yegappan/mru
+"pack fholgado/minibufexpl.vim
+"pack jeetsukumaran/vim-buffergator
 " }}}
 " keymap {{{
 nnoremap Y y$
@@ -88,27 +92,31 @@ nnoremap <leader>q  :clo<cr>
 let g:SuperTabDefaultCompletionType = "context"
 " }}}
 " statusline {{{
+"filename
+hi default link User1 Identifier
+" flags
+hi default link User2 Statement
+" errors
+hi default link User3 Error
 set statusline=
 
+set statusline+=♯%{winnr()}\                  " buffer number
+set statusline+=%<
 set statusline+=%F                            " current file path
-set statusline+=\                             " blank space
-set statusline+=%y                            " filetype
-set statusline+=\                             " blank space
-set statusline+=%m                            " modified flag [+]
-set statusline+=\                             " blank space
+set statusline+=\                             
+set statusline+=%2*%h%w%m%r%*
+set statusline+=\                             
 
 set statusline+=%=                            " right-align from now on
 
+set statusline+=%y                            " filetype
+set statusline+=\                             
+set statusline+=[%{&ff}%{strlen(&fenc)?'→'.&fenc:''}]
 set statusline+=%{PasteForStatusline()}       " paste flag
-set statusline+=\[%{mode()}\]                 " current mode
-set statusline+=\                             " blank space
-set statusline+=%v                            " column number
-set statusline+=\:                            " colon separator
-set statusline+=%l                            " row number
-set statusline+=\/                            " slash separator
-set statusline+=%L                            " number of rows
-set statusline+=\                             " blank space
-set statusline+=%{winnr()}                    " buffer number
+" set statusline+=\[%{mode()}\]                 " current mode
+set statusline+=\                             
+
+set statusline+=%-10(\ L%l:C%c\ %)
 
 function! PasteForStatusline()
     let paste_status = &paste

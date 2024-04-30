@@ -52,13 +52,14 @@ def helptags():
         docdir=os.path.join(packoptdir, a, 'doc')
         os.system('vim -nEs -c "silent! helptags %s | q"' % vimescape(docdir))
 
-def move2opt(*argv):
+def opt(*argv):
     plug = argv[0]
     os.rename(os.path.join(packstartdir, plug), os.path.join(packoptdir, plug))
 
-def move2start(*argv):
+def start(*argv):
     plug = argv[0]
     os.rename(os.path.join(packoptdir, plug), os.path.join(packstartdir, plug))
+
 def search(plug):
     url='https://vimawesome.com/api/plugins?query=%s' % plug
     try:
@@ -74,7 +75,7 @@ def search(plug):
         print('\t',pl['github_url'])
         print('\t',pl['short_desc'])
 
-def list(*argv):
+def list(*_):
     l=len('https://github.com/')
     for a in os.listdir(packstartdir):
         plug =os.popen('cd %s; git remote get-url --push origin' % os.path.join(packstartdir, a)).read()
@@ -82,29 +83,36 @@ def list(*argv):
 
     for a in os.listdir(packoptdir):
         plug=os.popen('cd %s; git remote get-url --push origin' % os.path.join(packoptdir, a)).read()
-        print("[opt]", plug.strip()[l:])
+        print(plug.strip()[l:], '(opt)')
 
 packre=re.compile("""\s*\"\s*Pack '(.*/.*)'.*""")
-def install(*argv):
-    if argv[0]=='-f':
-        with open(argv[1]) as file:
-            argv=[]
-            for ln in file.readlines():
-                m=packre.match(ln)
-                if m:
-                    argv.append(m.group(1))
-            print("to be installed:")
-            print(" ".join(argv))
-                    
-    for plug in argv:
-        os.system('git clone https://github.com/%s %s' % (plug, os.path.join(packstartdir, plug.split('/')[1])))
+def install(plug, *options):
+    # if argv[0]=='-f':
+        # with open(argv[1]) as file:
+            # argv=[]
+            # for ln in file.readlines():
+                # m=packre.match(ln)
+                # if m:
+                    # argv.append(m.group(1))
+            # print("to be installed:")
+            # print(" ".join(argv))
+    target=os.path.join(packoptdir, plug.split('/')[1]) 
+    if os.path.exists(target):
+        print("Plugin already exists in ", taget)
+        return 
     
-def remove(*argv):
-    for plug in argv:
-        if os.path.exists(os.path.join(packstartdir, plug)):
-            shutil.rmtree(os.path.join(packstartdir, plug))
-        else:
-            shutil.rmdir(os.path.join(packoptdir, plug))
+    target=os.path.join(packstartdir, plug.split('/')[1]) 
+    if os.path.exists(target):
+        print("Plugin already exists in ", target)
+        return
+
+    os.system('git clone https://github.com/%s %s' % (plug, os.path.join(packstartdir, plug.split('/')[1])))
+    
+def remove(plug):
+    if os.path.exists(os.path.join(packstartdir, plug)):
+        shutil.rmtree(os.path.join(packstartdir, plug))
+    else:
+        shutil.rmdir(os.path.join(packoptdir, plug))
 
 def main(action, *argv):
     if action in ['helptags', 'list', 'install', 'remove', 'start', 'opt', 'search']:
