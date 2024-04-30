@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-import sys,os
+import sys,os,subprocess
 import shutil
 import re
 import json
@@ -8,12 +8,12 @@ import urllib.error
 import urllib.request
 
 home=os.path.expanduser('~')
-if sys.platform=='win32':
+if os.name=='nt':
     vimhome=os.path.join(home, 'vimfiles')
 else:
     vimhome=os.path.join(home,'.vim')
-packoptdir=os.path.join(vimhome, 'pack/vpack/opt/')
-packstartdir=os.path.join(vimhome, 'pack/vpack/start')
+packoptdir=os.path.join(vimhome, 'pack','vpack','opt')
+packstartdir=os.path.join(vimhome, 'pack','vpack','start')
 
 def helper():
     print('''
@@ -75,27 +75,52 @@ def search(plug):
         print('\t',pl['github_url'])
         print('\t',pl['short_desc'])
 
+def escape(path):
+    if os.name=='nt':
+        return path.replace("\\", "\\\\")
+    return path
+
 def list(*_):
     l=len('https://github.com/')
+    cwd=os.getcwd()
+    if not os.path.exists(packstartdir):
+        return
     for a in os.listdir(packstartdir):
-        plug =os.popen('cd %s; git remote get-url --push origin' % os.path.join(packstartdir, a)).read()
+        os.chdir(os.path.join(packstartdir, a))
+        plug =os.popen('git remote get-url --push origin').read()
         print(plug.strip()[l:])
 
+    if not os.path.exists(packoptdir):
+        return
+    os.chdir(packoptdir)
     for a in os.listdir(packoptdir):
+        os.chdir(os.path.join(packoptdir, a))
         plug=os.popen('cd %s; git remote get-url --push origin' % os.path.join(packoptdir, a)).read()
         print(plug.strip()[l:], '(opt)')
+    os.chdir(cwd)
 
-packre=re.compile("""\s*\"\s*Pack '(.*/.*)'.*""")
-def install(plug, *options):
-    # if argv[0]=='-f':
-        # with open(argv[1]) as file:
-            # argv=[]
-            # for ln in file.readlines():
-                # m=packre.match(ln)
-                # if m:
-                    # argv.append(m.group(1))
-            # print("to be installed:")
-            # print(" ".join(argv))
+def handle_file(file):
+    if os.path.exists(file):
+        plugs=[]
+        with open(file, encoding='utf-8') as file:
+            for line in file.readlines(): 
+                m=re.match('"pack (.*/.*)', line)
+                if m:
+                    plugs.append(m.group(1))
+    for plug in plugs:
+        print(plug)
+        install(plug)
+
+def install(*argv):
+    if not (len(argv)==1 and re.match('.*/.*', argv[0])):
+        if argv[0]=='-f' and len(argv)==2 and os.path.exists(argv[1]):
+            handle_file(argv[1])
+        else:
+            helper()
+        return
+                
+    plug=argv[0]
+    assert(re.match('.*/.*', plug))
     target=os.path.join(packoptdir, plug.split('/')[1]) 
     if os.path.exists(target):
         print("Plugin already exists in ", taget)
@@ -106,7 +131,7 @@ def install(plug, *options):
         print("Plugin already exists in ", target)
         return
 
-    os.system('git clone https://github.com/%s %s' % (plug, os.path.join(packstartdir, plug.split('/')[1])))
+    os.system('git clone --depth=1 https://github.com/%s %s' % (plug, os.path.join(packstartdir, plug.split('/')[1])))
     
 def remove(plug):
     if os.path.exists(os.path.join(packstartdir, plug)):

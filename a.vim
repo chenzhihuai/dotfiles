@@ -5,13 +5,14 @@ let g:mapleader = " "
 set background=dark
 " colorscheme habamax
 if has('gui_running')
-  set background=light
   colorscheme default
+  set background=light
 endif
 set hidden 
 set nu
 set autoread
 set modeline
+set belloff=all
 " search
 set smartcase
 set ignorecase
