@@ -21,13 +21,36 @@ Usage: vpack COMMAND [options] [pack]
 
 Commands:
     list       list packages
+    search     search package via vimawesome.com
     install    install packages from remote repos
     remove     remove packages 
     start      move packages to start
     opt        move packages to opt
+    helptags   generate helptags for all packages
 Example:
+    vpack search ale
+    vpack install w0rp/ale
+    vpack list
+    vpack opt ale
+    vpack install -f a.vim
 ''')
 
+def vimescape(s):
+    """
+    Escape filename for the shell.
+    """
+    if os.name == "nt":
+        return '"' + s.replace("\\\\", "/") + '"'
+    else:
+        return s.replace(" ", r"\ ")
+
+def helptags():
+    for a in os.listdir(packstartdir):
+        docdir=os.path.join(packstartdir, a, 'doc')
+        os.system('vim -nEs -c "silent! helptags %s | q"' % vimescape(docdir))
+    for a in os.listdir(packoptdir):
+        docdir=os.path.join(packoptdir, a, 'doc')
+        os.system('vim -nEs -c "silent! helptags %s | q"' % vimescape(docdir))
 
 def move2opt(*argv):
     plug = argv[0]
@@ -51,7 +74,7 @@ def search(plug):
         print('\t',pl['github_url'])
         print('\t',pl['short_desc'])
 
-def list_(*argv):
+def list(*argv):
     l=len('https://github.com/')
     for a in os.listdir(packstartdir):
         plug =os.popen('cd %s; git remote get-url --push origin' % os.path.join(packstartdir, a)).read()
@@ -84,21 +107,13 @@ def remove(*argv):
             shutil.rmdir(os.path.join(packoptdir, plug))
 
 def main(action, *argv):
-    print('DEBUG:',action, *argv)
-    if action=='list':
-        list_()
-    elif action=='install':
-        install(*argv)
-    elif action=='remove':
-        remove(*argv)
-    elif action=='start':
-        move2start(*argv)
-    elif action=='opt':
-        move2opt(*argv)
-    elif action=='search':
-        search(*argv)
+    if action in ['helptags', 'list', 'install', 'remove', 'start', 'opt', 'search']:
+        globals()[action](*argv)
     else:
         helper()
 
 if __name__=='__main__':
-    main(*(sys.argv[1:]))
+    if len(sys.argv)==1:
+        helper()
+    else:
+        main(*(sys.argv[1:]))
