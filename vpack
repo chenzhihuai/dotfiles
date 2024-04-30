@@ -1,0 +1,104 @@
+#!/usr/bin/python3
+import sys,os
+import shutil
+import re
+import json
+
+import urllib.error
+import urllib.request
+
+home=os.path.expanduser('~')
+if sys.platform=='win32':
+    vimhome=os.path.join(home, 'vimfiles')
+else:
+    vimhome=os.path.join(home,'.vim')
+packoptdir=os.path.join(vimhome, 'pack/vpack/opt/')
+packstartdir=os.path.join(vimhome, 'pack/vpack/start')
+
+def helper():
+    print('''
+Usage: vpack COMMAND [options] [pack]
+
+Commands:
+    list       list packages
+    install    install packages from remote repos
+    remove     remove packages 
+    start      move packages to start
+    opt        move packages to opt
+Example:
+''')
+
+
+def move2opt(*argv):
+    plug = argv[0]
+    os.rename(os.path.join(packstartdir, plug), os.path.join(packoptdir, plug))
+
+def move2start(*argv):
+    plug = argv[0]
+    os.rename(os.path.join(packoptdir, plug), os.path.join(packstartdir, plug))
+def search(plug):
+    url='https://vimawesome.com/api/plugins?query=%s' % plug
+    try:
+        print("DEBUG: ", url)
+        req=urllib.request.Request(url, headers={"User-Agent": "Mozilla/5.0"})
+        response = urllib.request.urlopen(req)
+    except urllib.error.HTTPError as e:
+        print("http error: ", e)
+    j=json.loads(response.read().decode('utf-8'))
+    for pl in j['plugins'][:5]:
+        print(pl['github_owner']+'/'+pl['name'])
+        print('\t stars:', pl['github_stars'])
+        print('\t',pl['github_url'])
+        print('\t',pl['short_desc'])
+
+def list_(*argv):
+    l=len('https://github.com/')
+    for a in os.listdir(packstartdir):
+        plug =os.popen('cd %s; git remote get-url --push origin' % os.path.join(packstartdir, a)).read()
+        print(plug.strip()[l:])
+
+    for a in os.listdir(packoptdir):
+        plug=os.popen('cd %s; git remote get-url --push origin' % os.path.join(packoptdir, a)).read()
+        print("[opt]", plug.strip()[l:])
+
+packre=re.compile("""\s*\"\s*Pack '(.*/.*)'.*""")
+def install(*argv):
+    if argv[0]=='-f':
+        with open(argv[1]) as file:
+            argv=[]
+            for ln in file.readlines():
+                m=packre.match(ln)
+                if m:
+                    argv.append(m.group(1))
+            print("to be installed:")
+            print(" ".join(argv))
+                    
+    for plug in argv:
+        os.system('git clone https://github.com/%s %s' % (plug, os.path.join(packstartdir, plug.split('/')[1])))
+    
+def remove(*argv):
+    for plug in argv:
+        if os.path.exists(os.path.join(packstartdir, plug)):
+            shutil.rmtree(os.path.join(packstartdir, plug))
+        else:
+            shutil.rmdir(os.path.join(packoptdir, plug))
+
+def main(action, *argv):
+    print('DEBUG:',action, *argv)
+    if action=='list':
+        list_()
+    elif action=='install':
+        install(*argv)
+    elif action=='remove':
+        remove(*argv)
+    elif action=='start':
+        move2start(*argv)
+    elif action=='opt':
+        move2opt(*argv)
+    elif action=='search':
+        search(*argv)
+    else:
+        helper()
+
+if __name__=='__main__':
+    main(*(sys.argv[1:]))
