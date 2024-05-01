@@ -7,6 +7,7 @@ set background=dark
 if has('gui_running')
   colorscheme default
   set background=light
+  set guioptions-=rL
 endif
 set hidden 
 set nu
@@ -127,8 +128,6 @@ function! PasteForStatusline()
 	return ""
     endif
 endfunction
-" set statusline+=%#warningmsg#                 " Syntastic error flag
-" set statusline+=%{SyntasticStatuslineFlag()}  " Syntastic error flag
-" set statusline+=%*                            " Syntastic error flag
 " }}}
 " vim: fdm=marker fmr={{{,}}} sw=2
+

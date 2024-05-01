@@ -3,6 +3,7 @@ import sys,os,subprocess
 import shutil
 import re
 import json
+import argparse
 
 import urllib.error
 import urllib.request
@@ -86,8 +87,8 @@ def list(*_):
     if not os.path.exists(packstartdir):
         return
     for a in os.listdir(packstartdir):
-        os.chdir(os.path.join(packstartdir, a))
-        plug =os.popen('git remote get-url --push origin').read()
+        os.chdir(os.path.join(packstartdir,a))
+        plug=os.popen('git remote get-url --push origin').read()
         print(plug.strip()[l:])
 
     if not os.path.exists(packoptdir):
@@ -107,31 +108,39 @@ def handle_file(file):
                 m=re.match('"pack (.*/.*)', line)
                 if m:
                     plugs.append(m.group(1))
-    for plug in plugs:
-        print(plug)
-        install(plug)
+    return plugs
 
 def install(*argv):
-    if not (len(argv)==1 and re.match('.*/.*', argv[0])):
-        if argv[0]=='-f' and len(argv)==2 and os.path.exists(argv[1]):
-            handle_file(argv[1])
-        else:
-            helper()
-        return
-                
-    plug=argv[0]
-    assert(re.match('.*/.*', plug))
-    target=os.path.join(packoptdir, plug.split('/')[1]) 
-    if os.path.exists(target):
-        print("Plugin already exists in ", taget)
-        return 
-    
-    target=os.path.join(packstartdir, plug.split('/')[1]) 
-    if os.path.exists(target):
-        print("Plugin already exists in ", target)
-        return
+    parser = argparse.ArgumentParser(
+            prog='vpack install',
+            description='install vim plug')
+    parser.add_argument('plugs', nargs='*')    
+    parser.add_argument('-f', '--fromfile', help='specify a file lists plugins')
+    parser.add_argument('-d', '--dir', default=packstartdir, help='directory to be installed, can be `start`,`opt` or any specified path')  
+    args = parser.parse_args(argv)
+    if args.fromfile:
+        args.plugs+=handle_file(args.fromfile)
+    if args.dir=='start':
+        args.dir=packstartdir
+    if args.dir=='opt':
+        args.dir=packoptdir
+    for plug in args.plugs:
+        if not re.match('.*/.*', plug):
+            print("SKIP %s, since it dosen't look like a plugin"%plug)
+            continue
+        if args.dir in [packoptdir, packstartdir]:
+            plugdir1=os.path.join(packoptdir, plug.split('/')[1])
+            plugdir2=os.path.join(packstartdir, plug.split('/')[1])
+            if os.path.exists(plugdir1) or os.path.exists(plugdir2):
+                print("Plugin %s already exists in " % plug, plugdir)
+                return 
 
-    os.system('git clone --depth=1 https://github.com/%s %s' % (plug, os.path.join(packstartdir, plug.split('/')[1])))
+        plugdir=os.path.join(args.dir, plug.split('/')[1]) 
+        if os.path.exists(plugdir):
+            print("Plugin %s already exists in " % plug, plugdir)
+            return 
+    
+        os.system('git clone --depth=1 https://github.com/%s %s' % (plug, plugdir))
     
 def remove(plug):
     if os.path.exists(os.path.join(packstartdir, plug)):
