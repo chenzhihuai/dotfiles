@@ -1,0 +1,16 @@
+preservim/nerdtree
+junegunn/vim-peekaboo
+ervandew/supertab
+scrooloose/nerdcommenter
+mg979/vim-visual-multi
+liuchengxu/vista.vim
+skywind3000/asyncrun.vim
+machakann/vim-highlightedyank
+godlygeek/tabular
+
+yegappan/mru
+jeetsukumaran/vim-buffergator
+moll/vim-bbye
+mg979/vim-xtabline
+ap/vim-buftabline
+zefei/vim-wintabs

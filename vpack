@@ -101,11 +101,12 @@ def list(*_):
     os.chdir(cwd)
 
 def handle_file(file):
+    pattern='(.*/.*)' if file.endswith('.txt') else '"pack (.*/.*)'
     if os.path.exists(file):
         plugs=[]
         with open(file, encoding='utf-8') as file:
             for line in file.readlines(): 
-                m=re.match('"pack (.*/.*)', line)
+                m=re.match(pattern, line)
                 if m:
                     plugs.append(m.group(1))
     return plugs
@@ -132,13 +133,14 @@ def install(*argv):
             plugdir1=os.path.join(packoptdir, plug.split('/')[1])
             plugdir2=os.path.join(packstartdir, plug.split('/')[1])
             if os.path.exists(plugdir1) or os.path.exists(plugdir2):
+                plugdir=plugdir1 if os.path.exists(plugdir1) else plugdir2
                 print("Plugin %s already exists in " % plug, plugdir)
-                return 
+                continue
 
         plugdir=os.path.join(args.dir, plug.split('/')[1]) 
         if os.path.exists(plugdir):
             print("Plugin %s already exists in " % plug, plugdir)
-            return 
+            continue
     
         os.system('git clone --depth=1 https://github.com/%s %s' % (plug, plugdir))
     
@@ -146,7 +148,7 @@ def remove(plug):
     if os.path.exists(os.path.join(packstartdir, plug)):
         shutil.rmtree(os.path.join(packstartdir, plug))
     else:
-        shutil.rmdir(os.path.join(packoptdir, plug))
+        shutil.rmtree(os.path.join(packoptdir, plug))
 
 def main(action, *argv):
     if action in ['helptags', 'list', 'install', 'remove', 'start', 'opt', 'search']:
