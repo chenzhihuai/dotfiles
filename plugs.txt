@@ -2,15 +2,19 @@ preservim/nerdtree
 junegunn/vim-peekaboo
 ervandew/supertab
 scrooloose/nerdcommenter
-mg979/vim-visual-multi
 liuchengxu/vista.vim
-skywind3000/asyncrun.vim
+luochen1990/rainbow
 machakann/vim-highlightedyank
+mg979/vim-visual-multi
 godlygeek/tabular
+gorkunov/smartpairs.vim
+skywind3000/asyncrun.vim
 
 yegappan/mru
 jeetsukumaran/vim-buffergator
 moll/vim-bbye
 mg979/vim-xtabline
 ap/vim-buftabline
+dense-analysis/ale
 zefei/vim-wintabs
+mildred/vim-bufmru

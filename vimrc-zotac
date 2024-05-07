@@ -1,0 +1,22 @@
+source ~/dotfiles/a.vim
+"source ~/.vimrc.local
+set mp=verilator\ --lint-only\ --Wall\ a.v
+set errorformat=
+set errorformat=%%%trror%.%#:\ %f:%l:%c:\ %m
+set errorformat+=%%%trror%.%#:\ %f:%l:\ %m
+
+set errorformat+=%%%tarning%.%#:\ %f:%l:%c:\ %m
+set errorformat+=%%%tarning%.%#:\ %f:%l:\ %m
+
+
+
+"let g:wintabs_display='statusline'
+nmap <leader>E :e $MYVIMRC<cr>
+nmap <leader>S :so $MYVIMRC<cr>
+"set termguicolors
+"
+"
+set omnifunc=ale#completion#OmniFunc
+hi! link TabLine TabLineFill
+hi! link BufTabLineActive TabLineFill
+set laststatus=2

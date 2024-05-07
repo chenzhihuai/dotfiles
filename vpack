@@ -86,6 +86,7 @@ def list(*_):
     cwd=os.getcwd()
     if not os.path.exists(packstartdir):
         return
+    print("====== start ======")
     for a in os.listdir(packstartdir):
         os.chdir(os.path.join(packstartdir,a))
         plug=os.popen('git remote get-url --push origin').read()
@@ -94,16 +95,17 @@ def list(*_):
     if not os.path.exists(packoptdir):
         return
     os.chdir(packoptdir)
+    print("\n====== opt ======")
     for a in os.listdir(packoptdir):
         os.chdir(os.path.join(packoptdir, a))
-        plug=os.popen('cd %s; git remote get-url --push origin' % os.path.join(packoptdir, a)).read()
-        print(plug.strip()[l:], '(opt)')
+        plug=os.popen('git remote get-url --push origin').read()
+        print(plug.strip()[l:])
     os.chdir(cwd)
 
 def handle_file(file):
     pattern='(.*/.*)' if file.endswith('.txt') else '"pack (.*/.*)'
+    plugs=[]
     if os.path.exists(file):
-        plugs=[]
         with open(file, encoding='utf-8') as file:
             for line in file.readlines(): 
                 m=re.match(pattern, line)
