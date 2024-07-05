@@ -1,0 +1,62 @@
+command! Build :call CompileRun()<CR>
+
+" === Patches ===
+" split vertically by default
+let g:EasyMotion_smartcase = 1
+let g:EasyMotion_do_mapping=0
+set background=dark
+let g:gruvbox_plugin_hi_groups=1
+colorscheme gruvbox
+
+if has("gui_running")
+    set guifont=consolas:h11
+    set lines=999 columns=999
+endif
+
+unmenu PopUp
+nmenu PopUp.NerdTree <CMD>NERDTree<CR>
+nmenu PopUp.FindInTRee <CMD>NERDTreeFind<CR>
+nmenu PopUp.DiffThis <CMD>diffthis<CR>
+nmenu PopUp.CopyAll <CMD>%yank<CR>
+nmenu PopUp.ReplaceAll ggvGp
+nmenu PopUp.CopyLine ^y$
+nmenu PopUp.Close <CMD>close<CR>
+nmap <c-g> <cmd>echo expand('%:p') strftime('modified at %Y/%m/%d %H:%M:%S', getftime(expand('%:p'))) '(CWD:' getcwd()')'<cr>
+
+"nmap <leader>bs :call BufSel()<cr>
+
+command! -nargs=? -bang Buffer if <q-args> != '' | exe 'buffer '.<q-args> | else | ls<bang> | let buffer_nn=input('Which one: ') | if buffer_nn != '' | exe buffer_nn != 0 ? 'buffer '.buffer_nn : 'enew' | endif | endif
+let g:SuperTabDefaultCompletionType = "context"
+
+command! Build :call CompileRun()<CR>
+
+func! CompileRun()
+    exec "w"
+    if &filetype == 'c'
+        exec "!gcc % -o %<"
+        exec "!time ./%<"
+    elseif &filetype == 'cpp'
+        exec "!g++ % -o %<"
+        exec "!time ./%<"
+    elseif &filetype == 'java'
+        exec "!javac %"
+        exec "!time java %"
+    elseif &filetype == 'sh'
+        exec "!time bash %"
+    elseif &filetype == 'python'
+        exec "!time python3 %"
+    elseif &filetype == 'html'
+        exec "!google-chrome % &"
+    elseif &filetype == 'go'
+        exec "!go build %<"
+        exec "!time go run %"
+    elseif &filetype == 'matlab'
+        exec "!time octave %"
+    endif
+endfunc
+let $LANG='en'
+" For regular expressions turn magic on
+set magic
+
+set termguicolors
+au! vimenter * set modeline
