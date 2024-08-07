@@ -1,6 +1,5 @@
 preservim/nerdtree
 junegunn/vim-peekaboo
-ervandew/supertab
 scrooloose/nerdcommenter
 liuchengxu/vista.vim
 luochen1990/rainbow
@@ -13,8 +12,8 @@ skywind3000/asyncrun.vim
 yegappan/mru
 jeetsukumaran/vim-buffergator
 moll/vim-bbye
-mg979/vim-xtabline
 ap/vim-buftabline
-dense-analysis/ale
-zefei/vim-wintabs
 mildred/vim-bufmru
+neoclide/coc.nvim --branch release
+junegunn/fzf.vim
+junegunn/fzf

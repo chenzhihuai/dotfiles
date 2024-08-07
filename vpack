@@ -30,10 +30,11 @@ Commands:
     helptags   generate helptags for all packages
 Example:
     vpack search ale
-    vpack install w0rp/ale
+    vpack install w0rp/ale --nvim
     vpack list
     vpack opt ale
-    vpack install -f a.vim
+    vpack install -f plugs.txt
+    cat plugs.txt | xargs -l vpack install
 ''')
 
 def vimescape(s):
@@ -64,7 +65,6 @@ def start(*argv):
 def search(plug):
     url='https://vimawesome.com/api/plugins?query=%s' % plug
     try:
-        print("DEBUG: ", url)
         req=urllib.request.Request(url, headers={"User-Agent": "Mozilla/5.0"})
         response = urllib.request.urlopen(req)
     except urllib.error.HTTPError as e:
@@ -117,40 +117,33 @@ def install(*argv):
     parser = argparse.ArgumentParser(
             prog='vpack install',
             description='install vim plug')
-    parser.add_argument('plugs', nargs='*')    
-    parser.add_argument('-f', '--fromfile', help='specify a file lists plugins')
-    parser.add_argument('-d', '--dir', default=packstartdir, help='directory to be installed, can be `start`,`opt` or any specified path')  
+    parser.add_argument('plug')    
+    parser.add_argument('-b', '--branch', help='specify branch')
     args = parser.parse_args(argv)
-    if args.fromfile:
-        args.plugs+=handle_file(args.fromfile)
-    if args.dir=='start':
-        args.dir=packstartdir
-    if args.dir=='opt':
-        args.dir=packoptdir
-    for plug in args.plugs:
-        if not re.match('.*/.*', plug):
-            print("SKIP %s, since it dosen't look like a plugin"%plug)
-            continue
-        if args.dir in [packoptdir, packstartdir]:
-            plugdir1=os.path.join(packoptdir, plug.split('/')[1])
-            plugdir2=os.path.join(packstartdir, plug.split('/')[1])
-            if os.path.exists(plugdir1) or os.path.exists(plugdir2):
-                plugdir=plugdir1 if os.path.exists(plugdir1) else plugdir2
-                print("Plugin %s already exists in " % plug, plugdir)
-                continue
+    if not re.match('.*/.*', args.plug):
+        print("SKIP %s, since it dosen't look like a plugin"%args.plug)
+        exit()
 
-        plugdir=os.path.join(args.dir, plug.split('/')[1]) 
-        if os.path.exists(plugdir):
-            print("Plugin %s already exists in " % plug, plugdir)
-            continue
-    
-        os.system('git clone --depth=1 https://github.com/%s %s' % (plug, plugdir))
+    plugdir=os.path.join(packstartdir, args.plug.split('/')[1]) 
+    plugdir1=os.path.join(packoptdir, args.plug.split('/')[1])
+    if os.path.exists(plugdir) or os.path.exists(plugdir1):
+        print("%s already exists in " % args.plug, plugdir)
+        exit()
+
+    if args.branch:
+        os.system('git clone --depth=1 https://github.com/%s %s --branch %s' % (args.plug, plugdir, args.branch))
+    else:
+        os.system('git clone --depth=1 https://github.com/%s %s' % (args.plug, plugdir))
     
 def remove(plug):
     if os.path.exists(os.path.join(packstartdir, plug)):
         shutil.rmtree(os.path.join(packstartdir, plug))
-    else:
+        print("%s removed!" % plug)
+    elif os.path.exists(os.path.join(packoptdir, plug)):
         shutil.rmtree(os.path.join(packoptdir, plug))
+        print("%s removed!" % plug)
+    else:
+        print("%s not found!" % plug)
 
 def main(action, *argv):
     if action in ['helptags', 'list', 'install', 'remove', 'start', 'opt', 'search']:
@@ -159,6 +152,14 @@ def main(action, *argv):
         helper()
 
 if __name__=='__main__':
+    if '--nvim' in sys.argv:
+        if os.name=='nt':
+            vimhome=os.path.join(home, 'appdata/local/nvim/')
+        else:
+            vimhome=os.path.join(home,'.config/nvim')
+        packoptdir=os.path.join(vimhome, 'pack','vpack','opt')
+        packstartdir=os.path.join(vimhome, 'pack','vpack','start')
+        sys.argv.remove('--nvim')
     if len(sys.argv)==1:
         helper()
     else:
