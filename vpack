@@ -9,6 +9,7 @@ import urllib.error
 import urllib.request
 
 home=os.path.expanduser('~')
+vimexe='vim'
 if os.name=='nt':
     vimhome=os.path.join(home, 'vimfiles')
 else:
@@ -28,13 +29,15 @@ Commands:
     start      move packages to start
     opt        move packages to opt
     helptags   generate helptags for all packages
-Example:
-    vpack search ale
-    vpack install w0rp/ale --nvim
-    vpack list
-    vpack opt ale
-    vpack install -f plugs.txt
-    cat plugs.txt | xargs -l vpack install
+Examples:
+    vpack search ale                        :search plugin ale
+    vpack install w0rp/ale --nvim           :install ale for neovim
+    vpack list                              :list installed plugins
+    vpack opt ale                           :move ale to opt
+    cat plugs.txt | xargs -l vpack install  :install from file
+    vpack remove $(vpack list | fzf)
+    vpack install $(vpack search ale | fzf)
+
 ''')
 
 def vimescape(s):
@@ -49,10 +52,10 @@ def vimescape(s):
 def helptags():
     for a in os.listdir(packstartdir):
         docdir=os.path.join(packstartdir, a, 'doc')
-        os.system('vim -nEs -c "silent! helptags %s | q"' % vimescape(docdir))
+        os.system('%s -nEs -c "silent! helptags %s | q"' % (vimexe, vimescape(docdir)))
     for a in os.listdir(packoptdir):
         docdir=os.path.join(packoptdir, a, 'doc')
-        os.system('vim -nEs -c "silent! helptags %s | q"' % vimescape(docdir))
+        os.system('%s -nEs -c "silent! helptags %s | q"' % (vimexe, vimescape(docdir)))
 
 def opt(*argv):
     plug = argv[0]
@@ -66,7 +69,7 @@ def search(plug):
     url='https://vimawesome.com/api/plugins?query=%s' % plug
     try:
         req=urllib.request.Request(url, headers={"User-Agent": "Mozilla/5.0"})
-        response = urllib.request.urlopen(req)
+        response = urllib.request.urlopen(req, timeout=10)
     except urllib.error.HTTPError as e:
         print("http error: ", e)
     j=json.loads(response.read().decode('utf-8'))
@@ -126,6 +129,7 @@ def install(*argv):
 
     plugdir=os.path.join(packstartdir, args.plug.split('/')[1]) 
     plugdir1=os.path.join(packoptdir, args.plug.split('/')[1])
+    print("Installing %s (branch %s)..." % (args.plug, args.branch if args.branch else 'default'))
     if os.path.exists(plugdir) or os.path.exists(plugdir1):
         print("%s already exists in " % args.plug, plugdir)
         exit()
@@ -136,11 +140,16 @@ def install(*argv):
         os.system('git clone --depth=1 https://github.com/%s %s' % (args.plug, plugdir))
     
 def remove(plug):
+    def onerror(func, path, execinfo):
+        os.chmod(path, stat.S_IwRITE)
+        func(path)
+    if '/' in plug:
+        plug=plug.split('/')[1]
     if os.path.exists(os.path.join(packstartdir, plug)):
-        shutil.rmtree(os.path.join(packstartdir, plug))
+        shutil.rmtree(os.path.join(packstartdir, plug), onerror=onerror)
         print("%s removed!" % plug)
     elif os.path.exists(os.path.join(packoptdir, plug)):
-        shutil.rmtree(os.path.join(packoptdir, plug))
+        shutil.rmtree(os.path.join(packoptdir, plug), onerror=onerror)
         print("%s removed!" % plug)
     else:
         print("%s not found!" % plug)
@@ -155,8 +164,10 @@ if __name__=='__main__':
     if '--nvim' in sys.argv:
         if os.name=='nt':
             vimhome=os.path.join(home, 'appdata/local/nvim/')
+            vimexec='nvim'
         else:
             vimhome=os.path.join(home,'.config/nvim')
+            vimexec='nvim'
         packoptdir=os.path.join(vimhome, 'pack','vpack','opt')
         packstartdir=os.path.join(vimhome, 'pack','vpack','start')
         sys.argv.remove('--nvim')

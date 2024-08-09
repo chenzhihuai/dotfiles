@@ -11,8 +11,6 @@ set errorformat+=%%%tarning%.%#:\ %f:%l:\ %m
 
 
 "let g:wintabs_display='statusline'
-nmap <leader>E :e $MYVIMRC<cr>
-nmap <leader>S :so $MYVIMRC<cr>
 "set termguicolors
 "
 "

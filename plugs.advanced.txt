@@ -1,4 +1,3 @@
-preservim/nerdtree
 junegunn/vim-peekaboo
 scrooloose/nerdcommenter
 liuchengxu/vista.vim
@@ -9,11 +8,16 @@ godlygeek/tabular
 gorkunov/smartpairs.vim
 skywind3000/asyncrun.vim
 
+preservim/nerdtree
 yegappan/mru
 jeetsukumaran/vim-buffergator
 moll/vim-bbye
 ap/vim-buftabline
-mildred/vim-bufmru
 neoclide/coc.nvim --branch release
 junegunn/fzf.vim
 junegunn/fzf
+
+pgdouyon/vim-evanesco
+noscript/elevator.vim
+junegunn/vim-peekaboo
+morhetz/gruvbox
