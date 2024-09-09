@@ -133,7 +133,7 @@ Plug 'easymotion/vim-easymotion'
 "Plug 'justinmk/vim-sneak'
 "cs ds ys and v_S
 Plug 'machakann/vim-sandwich'
-" Tabularize /^[^,]*\zs/r1c1l0 (digits are spaces before ,)
+" Tabularize /^[^,]*\zs/r1c1l0 (digits are spaces before delimater)
 Plug 'godlygeek/tabular'
 "<c-n> n N q Q [ ] <c-down>
 Plug 'mg979/vim-visual-multi'
