@@ -121,6 +121,7 @@ Plug 'skywind3000/asyncrun.vim'
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 Plug 'mhinz/vim-startify'
 Plug 'junegunn/vim-peekaboo'
+"Plug 'vim-airline/vim-airline'
 Plug 'itchyny/lightline.vim'
 Plug 'mengelbrecht/lightline-bufferline'
 Plug 'albertomontesg/lightline-asyncrun'
@@ -234,7 +235,7 @@ if has_key(g:plugs, 'lightline.vim')
     let g:lightline = {
                 \ 'colorscheme':'gruvbox',
                 \ 'active': {
-                \   'left': [ [ 'mode', 'paste' ], [ 'fugitive', 'filename' ] ],
+                \   'left': [ [ 'mode', 'paste' ], [ 'fugitive'], [ 'filename' ] ],
                 \   'right': [ [ 'syntastic', 'lineinfo' ], ['percent'], [ 'fileformat', 'fileencoding', 'filetype' ] ]
                 \ },
                 \ 'inactive': {
@@ -365,12 +366,33 @@ if has_key(g:plugs, 'lightline-bufferline')
 
     nmap <Leader>c1 <Plug>lightline#bufferline#delete(1)
     let g:lightline#bufferline#show_number=2
+
+    let g:lightline.subseparator = { 'left': '>', 'right': '<' }
     if has('tablineat')
         let g:lightline#bufferline#clickable=1
         let g:lightline.component_raw = {'buffers': 1}
     end
 endif
 
+if has_key(g:plugs, 'vim-airline')
+    let g:airline#extensions#tabline#enabled = 1
+    let g:airline#extensions#tabline#buffer_idx_mode = 1
+    nmap <leader>1 <Plug>AirlineSelectTab1
+    nmap <leader>2 <Plug>AirlineSelectTab2
+    nmap <leader>3 <Plug>AirlineSelectTab3
+    nmap <leader>4 <Plug>AirlineSelectTab4
+    nmap <leader>5 <Plug>AirlineSelectTab5
+    nmap <leader>6 <Plug>AirlineSelectTab6
+    nmap <leader>7 <Plug>AirlineSelectTab7
+    nmap <leader>8 <Plug>AirlineSelectTab8
+    nmap <leader>9 <Plug>AirlineSelectTab9
+    nmap <leader>0 <Plug>AirlineSelectTab0
+    nmap <leader>- <Plug>AirlineSelectPrevTab
+    nmap <leader>+ <Plug>AirlineSelectNextTab
+    let g:airline#extensions#hunks#enabled = 0
+    "let g:airline_powerline_fonts = 1
+    let g:airline#extensions#whitespace#enabled = 1
+endif
 if has_key(g:plugs, 'vim-sandwich')
     runtime macros/sandwich/keymap/surround.vim
 endif
@@ -379,7 +401,7 @@ endif
 "
 "" Include user's local vim config
 if filereadable(expand("~/.vimrc.local"))
-  source ~/.vimrc.local
+    source ~/.vimrc.local
 endif
 
 " vim: fdm=marker fmr={{{,}}}
