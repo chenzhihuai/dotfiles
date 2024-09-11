@@ -30,17 +30,15 @@
 
 let g:mapleader=' '
 
+nnoremap <leader><space>  :so ~/.vimrc<cr>
 " buffers
-nnoremap <leader>bn :bn<cr>
-nnoremap <leader>bp :bp<cr>
-nnoremap <leader>bd :bd<cr>
 nnoremap <leader>e  :e .<cr>
 nnoremap Q          :Bdelete<cr>
 nnoremap <leader>q  :clo<cr>
+cmap m<space> MRU<space>
 
 " jump
-map <leader>f <plug>(easymotion-bd-f)
-map <tab> <plug>(easymotion-bd-f)
+"nmap <c-g> <plug>(easymotion-s2)
 
 map g1 1<c-w>w
 map g2 2<c-w>w
@@ -57,8 +55,10 @@ nnoremap <leader>T :so $MYVIMRC<cr>
 nmap <leader>S :Startify<cr>
 
 " fzf
-nmap <leader>H :History<cr>
-nmap <leader>F :Files<cr>
+nmap <leader>h :History<cr>
+nmap <leader>f :Files<cr>
+nmap <leader>b :Buffers<cr>
+nmap <leader>m :FZFMru<cr>
 nmap <leader>rg :Rg<cr>
 
 " coc
@@ -93,44 +93,54 @@ call plug#begin($VIMHOME. '/plugged')
 " => Basic Setting
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 Plug 'chenzhihuai/vim-default-improved'
-Plug 'pgdouyon/vim-evanesco'
-if version >= 900
-    Plug 'noscript/elevator.vim'
-endif
-Plug 'machakann/vim-highlightedyank'
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => Completion
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-"Plug 'neoclide/coc.nvim', {'branch': 'release'}
-Plug 'ervandew/supertab'
+Plug 'neoclide/coc.nvim', {'branch': 'release'}
+"Plug 'ervandew/supertab'
 Plug 'raimondi/delimitmate'
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => Integrations
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+Plug 'junegunn/gv.vim'
 Plug 'tpope/vim-fugitive'
 Plug 'airblade/vim-gitgutter'
 Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
 Plug 'junegunn/fzf.vim'
+Plug 'pbogut/fzf-mru.vim'
 Plug 'liuchengxu/vista.vim'
 Plug 'scrooloose/nerdtree'
 Plug 'jlanzarotta/bufexplorer'
 Plug 'skywind3000/asyncrun.vim'
+Plug 'skywind3000/asynctasks.vim'
+Plug 'jreybert/vimagit'
+Plug 'skywind3000/vim-terminal-help' "terminal like vscode : alt+=
 "Plug 'puremourning/vimspector'
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => Interface
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+if version >= 900
+    Plug 'noscript/elevator.vim'
+endif
 Plug 'mhinz/vim-startify'
 Plug 'junegunn/vim-peekaboo'
-"Plug 'vim-airline/vim-airline'
+Plug 'morhetz/gruvbox'
+
 Plug 'itchyny/lightline.vim'
 Plug 'mengelbrecht/lightline-bufferline'
 Plug 'albertomontesg/lightline-asyncrun'
-Plug 'morhetz/gruvbox'
+Plug 'josa42/vim-lightline-coc'
+
+" search
+Plug 'machakann/vim-highlightedyank'
+Plug 'markonm/traces.vim'
+Plug 'pgdouyon/vim-evanesco'
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => Commands
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 Plug 'scrooloose/nerdcommenter'
-Plug 'easymotion/vim-easymotion'
+"Plug 'easymotion/vim-easymotion'
+Plug 'monkoose/vim9-stargate'
 "Plug 'justinmk/vim-sneak'
 "cs ds ys and v_S
 Plug 'machakann/vim-sandwich'
@@ -141,13 +151,16 @@ Plug 'mg979/vim-visual-multi'
 "eval expression with g= g== g=
 Plug 'moll/vim-bbye'
 " resize font via ^= ^- and ^mouse
-Plug 'eggbean/resize-font.gvim'
+Plug 'gorkunov/smartpairs.vim'
+Plug 'wincent/ferret'
+Plug 'yegappan/mru'
+Plug 'nanotee/zoxide.vim'
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 call plug#end()
 "}}}
 
 " === Plug Configs === {{{
-
+noremap <c-g> <Cmd>call stargate#OKvim(2)<CR>
 if has_key(g:plugs, 'wilder.nvim')
     call wilder#setup({'modes': [':', '/', '?']})
 
@@ -163,10 +176,10 @@ if has_key(g:plugs, 'wilder.nvim')
                 \ }))
     call wilder#set_option('renderer', wilder#popupmenu_renderer(wilder#popupmenu_border_theme({
                 \ 'highlights': {
-                    \   'border': 'Normal',
-                    \ },
-                    \ 'border': 'rounded',
-                    \ })))
+                \   'border': 'Normal',
+                \ },
+                \ 'border': 'rounded',
+                \ })))
 endif
 if has_key(g:plugs, 'coc.nvim')
     inoremap <silent><expr> <TAB>
@@ -221,9 +234,9 @@ if has_key(g:plugs, 'fzf.vim')
     let g:fzf_layout = { 'window': { 'width': 0.9, 'height': 0.6, 'relative': v:true, 'yoffset': 1.0 } }
 
     let g:fzf_action = {
-        \ 'ctrl-q': 'wall | bdelete',
-        \ 'ctrl-x': 'split',
-        \ 'ctrl-v': 'vsplit' }
+                \ 'ctrl-q': 'wall | bdelete',
+                \ 'ctrl-x': 'split',
+                \ 'ctrl-v': 'vsplit' }
 
     let g:fzf_history_dir = '~/.local/share/fzf-history'
     if has('win32') || has('win64')
@@ -232,74 +245,113 @@ if has_key(g:plugs, 'fzf.vim')
 endif
 
 if has_key(g:plugs, 'lightline.vim')
+    let s:p = {'help':'Help', 'vista':'Tag', 'nerdtree':'Dir','unite': 'Unite', 'vimfiler': 'VimFiler', 'quickrun': 'Quickrun', 'dictionary': 'Dictionary', 'calendar': 'Calendar', 'thumbnail': 'Thumbnail', 'agit' : 'Agit', 'agit_diff' : 'Agit', 'agit_stat' : 'Agit', 'qf': 'QuickFix' }
+    function! LightlinePowerfulMode() abort
+        if &ft ==# 'calendar'
+            call lightline#link("nvV\<C-v>"[b:calendar.visual_mode()])
+        elseif &ft ==# 'thumbnail'
+            if !empty(b:thumbnail.view.visual_mode)
+                call lightline#link(b:thumbnail.view.visual_mode)
+            endif
+        endif
+        return get(s:p, &ft, lightline#mode())
+    endfunction
     let g:lightline = {
                 \ 'colorscheme':'gruvbox',
                 \ 'active': {
-                \   'left': [ [ 'mode', 'paste' ], [ 'fugitive'], [ 'filename' ] ],
-                \   'right': [ [ 'syntastic', 'lineinfo' ], ['percent'], [ 'fileformat', 'fileencoding', 'filetype' ] ]
+                \   'left': [ [ 'mode','paste', 'coc_errors' ], [ 'fugitive'],['filename'] ],
+                \   'right': [ [ 'syntastic', 'lineinfo' ], ['fileinfo'], [ 'filetype' ] ]
                 \ },
                 \ 'inactive': {
-                \   'left': [ [ 'mode'], [ 'fugitive', 'filename' ] ],
-                \   'right': [ [ 'syntastic']]
+                \   'left': [['filename']],
+                \   'right': [['lineinfo']]
                 \ },
-                \ 'tabline': {
-                \   'left': [ ['buffers'] ],
-                \   'right': [ ['close'] ]
-                \ },
+                \ 'component': {
+                \   'lineinfo':'%{%winwidth(0)>70?"%3l:%-2c☰%3p%%":""%}'
+                \ }, 
+                \ 'component_visible_condition': {
+                    \ 'lineinfo': 'fname =~# "NERD_tree"'
+                  \ },
                 \ 'component_function': {
                 \   'fugitive': 'LightlineFugitive',
                 \   'filename': 'LightlineFilename',
-                \   'fileformat': 'LightlineFileformat',
                 \   'filetype': 'LightlineFiletype',
-                \   'fileencoding': 'LightlineFileencoding',
-                \   'mode': 'LightlineMode',
-                \   'bufferinfo': 'lightline#buffer#bufferinfo',
-                \   'lineinfo': 'LightlineLineinfo',
-                \   'percent': 'LightLinePercent',
+                \   'fileinfo': 'LightlineFileinfo',
+                \   'mode': 'LightlinePowerfulMode',
                 \ },
                 \ 'component_expand': {
                 \   'syntastic': 'SyntasticStatuslineFlag',
-                \   'asyncrun_status': 'lightline#asyncrun#status',
-                \   'buffers': 'lightline#bufferline#buffers',
+                \   'buffers': 'lightline#bufferline#buffers'
                 \ },
                 \ 'component_type': {
                 \   'syntastic': 'error',
                 \   'buffers': 'tabsel'
                 \ },
-                \ 'subseparator': { 'left': '|', 'right': '|' }
+                \ 'separator': { 'left': '', 'right': '' },
+                \ 'subseparator': { 'left': '', 'right': '' },
+                \ 'tabline': {
+                \   'left': [ ['buffers'] ],
+                \   'right': [ ['close'] ]
                 \ }
-
-    function! LightlineLineinfo() abort
-        if winwidth(0) < 86
-            return ''
-        endif
-
-        let l:current_line = printf('%-3s', line('.'))
-        let l:current_column = printf('%-2s', col('.'))
-        let l:lineinfo = '' . l:current_line . ':' . l:current_column
-        return l:lineinfo
-    endfunction
-
+                \ }
+    call lightline#coc#register()
+    let g:lightline#bufferline#ordinal_number_map = {
+                \ 0: '⁰', 1: '¹', 2: '²', 3: '³', 4: '⁴',
+                \ 5: '⁵', 6: '⁶', 7: '⁷', 8: '⁸', 9: '⁹'}
     function! LightlineModified()
         return &ft ==# 'help' ? '' : &modified ? '+' : &modifiable ? '' : '-'
     endfunction
 
     function! LightlineReadonly()
-        return &ft !~? 'help' && &readonly ? 'RO' : ''
+        return &ft !~? 'help' && &readonly ? '' : ''
     endfunction
 
     function! LightlineFilename()
-        let fname = expand('%:t')
-        return fname =~ 'NERD_tree' ? b:NERDTree.root.path.str():
-                    \ (LightlineReadonly() !=# '' ? LightlineReadonly() . ' ' : '') .
-                    \ (fname !=# '' ? fname : '[No Name]') .
-                    \ (LightlineModified() !=# '' ? ' ' . LightlineModified() : '')
-    endfunction
+	  let fname = expand('%:t')
+	  return fname ==# 'ControlP' && has_key(g:lightline, 'ctrlp_item') ? g:lightline.ctrlp_item :
+	        \ fname =~# '^__Tagbar__\|__Gundo' ? '' :
+            \ fname =~# '^NERD_tree' ? b:NERDTree.root.path.str() :
+	        \ &ft ==# 'vimfiler' ? vimfiler#get_status_string() :
+	        \ &ft ==# 'unite' ? unite#get_status_string() :
+	        \ &ft ==# 'vimshell' ? vimshell#get_status_string() :
+            \ fname =~# '^\[preview' ? 'Preview' :
+	        \ (LightlineReadonly() !=# '' ? LightlineReadonly() . ' ' : '') .
+	        \ (fname !=# '' ? fname : '[No Name]') .
+	        \ (LightlineModified() !=# '' ? ' ' . LightlineModified() : '')
+	endfunction
 
+    let s:e = {
+      \ 'vimfiler' : 'vimfiler#get_status_string()',
+      \ 'unite' : 'unite#get_status_string()',
+      \ 'quickrun' : "''",
+      \ 'qf' : "''",
+      \ 'dictionary' : "exists('b:dictionary.input') ? b:dictionary.input : default",
+      \ 'calendar' : "strftime('%Y/%m/%d')",
+      \ 'thumbnail' : "exists('b:thumbnail.status') ? b:thumbnail.status : 'Thumbnail'",
+      \ 'agit' : "''",
+      \ 'agit_diff' : "''",
+      \ 'agit_stat' : "''",
+      \ '[Command Line]': "'Command Line'",
+      \ }
+    let s:f = [ 'vimfiler', 'unite', 'dictionary', 'thumbnail' ]
+    function! LightlinePowerfulFilename() abort
+        let f = expand('%:t')
+
+        if f=~# '^NERD_tree'
+            return b:NERDTree.root.path.str()
+        endif
+        if has_key(b:, 'lightline_filename') && get(b:, 'lightline_filename_', '') ==# f . &mod . &ma . &ft && (&ft ==# '' || index(s:f, &ft) < 0 && index(s:f, f) < 0)
+            return b:lightline_filename
+        endif
+        let b:lightline_filename_ = f . &mod . &ma . &ft
+        let default = join(filter([&ro ? 'RO' : '', f, &mod ? '+' : &ma ? '' : '-'], 'len(v:val)'), ' ')
+        let b:lightline_filename = &ft ==# '' && f ==# '' ? 'No Name' : f =~# '^\[preview' ? 'Preview' : eval(get(s:e, &ft, get(s:e, f, 'default')))
+        return b:lightline_filename
+    endfunction
     function! LightlineFugitive()
         try
-            if expand('%:t') !~? 'Tagbar\|Gundo\|NERD' && &ft !~? 'vimfiler' && exists('*FugitiveHead')
-                let mark = ''  " edit here for cool mark
+            if expand('%:t') !~? 'Tagbar\|Gundo\|NERD\|__vista__' && &ft !~? 'vimfiler' && exists('*FugitiveHead')
+                let mark = ''  " edit here for cool mark
                 let branch = FugitiveHead()
                 return branch !=# '' ? mark.branch : ''
             endif
@@ -308,29 +360,61 @@ if has_key(g:plugs, 'lightline.vim')
         return ''
     endfunction
 
-    function! LightlineFileformat()
-        return winwidth(0) > 70 ? &fileformat : ''
-    endfunction
 
+    let g:ignore_ft={'help':'', 'nerdtree':''}
     function! LightlineFiletype()
-        return winwidth(0) > 70 ? (&filetype !=# '' ? &filetype : 'no ft') : ''
+        return winwidth(0) > 70 ? (&filetype !=# '' ? get(g:ignore_ft, &filetype, &filetype): '') : ''
     endfunction
 
-    function! LightlineFileencoding()
-        return winwidth(0) > 70 ? (&fenc !=# '' ? &fenc : &enc) : ''
+    function! LightlineFileinfo()
+        let fenc=&fenc !=# '' ? &fenc : &enc
+        return winwidth(0) > 70 ? (fenc."[". &fileformat."]") : ''
     endfunction
 
     function! LightlineMode()
-        return '[#'.winnr().']'
+        let fname = expand('%:t')
+        return fname =~# '^__Tagbar__' ? 'Tagbar' :
+                    \ fname ==# 'ControlP' ? 'CtrlP' :
+                    \ fname ==# '__Gundo__' ? 'Gundo' :
+                    \ fname ==# '__Gundo_Preview__' ? 'Gundo Preview' :
+                    \ fname =~# 'NERD_tree' ? b:NERDTree.root.path.str() :
+                    \ &ft ==# 'unite' ? 'Unite' :
+                    \ &ft ==# 'vimfiler' ? 'VimFiler' :
+                    \ &ft ==# 'vimshell' ? 'VimShell' :
+                    \ winwidth(0) > 60 ? lightline#mode() : ''
     endfunction
 
-
-    function! LightLinePercent()
-      return winwidth(0) < 70 ? '' : (100 * line('.') / line('$')) . '%'
+    function! CtrlPMark()
+        if expand('%:t') ==# 'ControlP' && has_key(g:lightline, 'ctrlp_item')
+            call lightline#link('iR'[g:lightline.ctrlp_regex])
+            return lightline#concatenate([g:lightline.ctrlp_prev, g:lightline.ctrlp_item
+                        \ , g:lightline.ctrlp_next], 0)
+        else
+            return ''
+        endif
     endfunction
 
-    function! NearestFunctionOrMethod() abort
-        return get(b:, 'vista_nearest_function_or_method':'')
+    let g:ctrlp_status_func = {
+                \ 'main': 'CtrlPStatusFunc_1',
+                \ 'prog': 'CtrlPStatusFunc_2',
+                \ }
+
+    function! CtrlPStatusFunc_1(focus, byfname, regex, prev, item, next, marked)
+        let g:lightline.ctrlp_regex = a:regex
+        let g:lightline.ctrlp_prev = a:prev
+        let g:lightline.ctrlp_item = a:item
+        let g:lightline.ctrlp_next = a:next
+        return lightline#statusline(0)
+    endfunction
+
+    function! CtrlPStatusFunc_2(str)
+        return lightline#statusline(0)
+    endfunction
+
+    let g:tagbar_status_func = 'TagbarStatusFunc'
+
+    function! TagbarStatusFunc(current, sort, fname, ...) abort
+        return lightline#statusline(0)
     endfunction
 
     " Syntastic can call a post-check hook, let's update lightline there
@@ -338,9 +422,13 @@ if has_key(g:plugs, 'lightline.vim')
     function! SyntasticCheckHook(errors)
         call lightline#update()
     endfunction
+
+    let g:unite_force_overwrite_statusline = 0
+    let g:vimfiler_force_overwrite_statusline = 0
+    let g:vimshell_force_overwrite_statusline = 0
 endif
 
-    set showtabline=2
+set showtabline=2
 if has_key(g:plugs, 'lightline-bufferline')
     nmap <Leader>1 <Plug>lightline#bufferline#go(1)
     nmap <Leader>2 <Plug>lightline#bufferline#go(2)
@@ -367,7 +455,6 @@ if has_key(g:plugs, 'lightline-bufferline')
     nmap <Leader>c1 <Plug>lightline#bufferline#delete(1)
     let g:lightline#bufferline#show_number=2
 
-    let g:lightline.subseparator = { 'left': '>', 'right': '<' }
     if has('tablineat')
         let g:lightline#bufferline#clickable=1
         let g:lightline.component_raw = {'buffers': 1}
@@ -375,6 +462,8 @@ if has_key(g:plugs, 'lightline-bufferline')
 endif
 
 if has_key(g:plugs, 'vim-airline')
+    let g:airline#extensions#vista#enabled = 0
+    let g:airline#extensions#whitespace#enabled = 0
     let g:airline#extensions#tabline#enabled = 1
     let g:airline#extensions#tabline#buffer_idx_mode = 1
     nmap <leader>1 <Plug>AirlineSelectTab1
@@ -391,7 +480,6 @@ if has_key(g:plugs, 'vim-airline')
     nmap <leader>+ <Plug>AirlineSelectNextTab
     let g:airline#extensions#hunks#enabled = 0
     "let g:airline_powerline_fonts = 1
-    let g:airline#extensions#whitespace#enabled = 1
 endif
 if has_key(g:plugs, 'vim-sandwich')
     runtime macros/sandwich/keymap/surround.vim

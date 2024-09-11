@@ -8,21 +8,6 @@ set background=dark
 let g:gruvbox_plugin_hi_groups=1
 colorscheme gruvbox
 
-if has("gui_running")
-    set guifont=consolas:h11
-    set lines=999 columns=999
-endif
-
-unmenu PopUp
-nmenu PopUp.NerdTree <CMD>NERDTree<CR>
-nmenu PopUp.FindInTRee <CMD>NERDTreeFind<CR>
-nmenu PopUp.DiffThis <CMD>diffthis<CR>
-nmenu PopUp.CopyAll <CMD>%yank<CR>
-nmenu PopUp.ReplaceAll ggvGp
-nmenu PopUp.CopyLine ^y$
-nmenu PopUp.Close <CMD>close<CR>
-nmap <c-g> <cmd>echo expand('%:p') strftime('modified at %Y/%m/%d %H:%M:%S', getftime(expand('%:p'))) '(CWD:' getcwd()')'<cr>
-
 "nmap <leader>bs :call BufSel()<cr>
 
 command! -nargs=? -bang Buffer if <q-args> != '' | exe 'buffer '.<q-args> | else | ls<bang> | let buffer_nn=input('Which one: ') | if buffer_nn != '' | exe buffer_nn != 0 ? 'buffer '.buffer_nn : 'enew' | endif | endif
