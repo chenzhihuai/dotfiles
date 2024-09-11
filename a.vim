@@ -5,13 +5,15 @@ let g:mapleader = " "
 set background=dark
 " colorscheme habamax
 if has('gui_running')
-  set background=light
   colorscheme default
+  set background=light
+  set guioptions-=rL
 endif
 set hidden 
 set nu
 set autoread
 set modeline
+set belloff=all
 " search
 set smartcase
 set ignorecase
@@ -38,26 +40,10 @@ if has('persistent_undo')
   set undodir=/tmp,.
 end
 nmap <space><space> :w<cr>:so %<cr>
+nmap <leader>S :e $MYVIMRC<CR>
 
 
 "}}}
-" vpack {{{
-"cat a.vim | grep '^"pack .*/.*' | awk '{print $2}' | xargs -l echo vpack install
-"pack noscript/elevator.vim
-"pack machakann/vim-highlightedyank
-"pack ervandew/supertab
-"pack scrooloose/nerdtree
-"pack skywind3000/asyncrun.vim
-"pack junegunn/vim-peekaboo
-"pack mg979/vim-visual-multi
-"pack moll/vim-bbye
-"pack scrooloose/nerdcommenter
-"pack godlygeek/tabular
-"pack liuchengxu/vista.vim
-"pack yegappan/mru
-"pack fholgado/minibufexpl.vim
-"pack jeetsukumaran/vim-buffergator
-" }}}
 " keymap {{{
 nnoremap Y y$
 vnoremap < <gv
@@ -77,7 +63,7 @@ cmap mm MRU
 
 nnoremap <silent> [b :bprevious<CR>
 nnoremap <silent> ]b :bnext<CR>
-nnoremap <leader>e  :e .<cr>
+nnoremap <leader>e  :e %:h<cr>
 
 command! W w !sudo tee % > /dev/null
 map g1 1<c-w>w
@@ -88,8 +74,29 @@ map g5 5<c-w>w
 nnoremap Q          :Bdelete<cr>
 nnoremap <leader>q  :clo<cr>
 " }}}
-" plug.conf{{{
+" plugins {{{
+"
+let g:buffergator_viewport_split_policy='n'
 let g:SuperTabDefaultCompletionType = "context"
+let g:rainbow_active = 1
+let g:buftabline_show=1
+let g:buftabline_indicators=1
+let g:buftabline_separators=1
+let g:buftabline_numbers=2
+"hi! link TabLine TabLineFill
+"hi! link BufTabLineActive TabLineFill
+
+"nmap <leader>1 <Plug>BufTabLine.Go(1)
+"nmap <leader>2 <Plug>BufTabLine.Go(2)
+"nmap <leader>3 <Plug>BufTabLine.Go(3)
+"nmap <leader>4 <Plug>BufTabLine.Go(4)
+"nmap <leader>5 <Plug>BufTabLine.Go(5)
+"nmap <leader>6 <Plug>BufTabLine.Go(6)
+"nmap <leader>7 <Plug>BufTabLine.Go(7)
+"nmap <leader>8 <Plug>BufTabLine.Go(8)
+"nmap <leader>9 <Plug>BufTabLine.Go(9)
+"nmap <leader>0 <Plug>BufTabLine.Go(10)
+"nmap <backspace> <Plug>BufTabLine.Go(-1)
 " }}}
 " statusline {{{
 "filename
@@ -126,8 +133,6 @@ function! PasteForStatusline()
 	return ""
     endif
 endfunction
-" set statusline+=%#warningmsg#                 " Syntastic error flag
-" set statusline+=%{SyntasticStatuslineFlag()}  " Syntastic error flag
-" set statusline+=%*                            " Syntastic error flag
 " }}}
 " vim: fdm=marker fmr={{{,}}} sw=2
+
