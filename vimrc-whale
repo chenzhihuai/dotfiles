@@ -30,17 +30,15 @@
 
 let g:mapleader=' '
 
+nnoremap <leader><space>  :so ~/.vimrc<cr>
 " buffers
-nnoremap <leader>bn :bn<cr>
-nnoremap <leader>bp :bp<cr>
-nnoremap <leader>bd :bd<cr>
 nnoremap <leader>e  :e .<cr>
 nnoremap Q          :Bdelete<cr>
 nnoremap <leader>q  :clo<cr>
+cmap m<space> MRU<space>
 
 " jump
-map <leader>f <plug>(easymotion-bd-f)
-map <tab> <plug>(easymotion-bd-f)
+"nmap <c-g> <plug>(easymotion-s2)
 
 map g1 1<c-w>w
 map g2 2<c-w>w
@@ -57,8 +55,10 @@ nnoremap <leader>T :so $MYVIMRC<cr>
 nmap <leader>S :Startify<cr>
 
 " fzf
-nmap <leader>H :History<cr>
-nmap <leader>F :Files<cr>
+nmap <leader>h :History<cr>
+nmap <leader>f :Files<cr>
+nmap <leader>b :Buffers<cr>
+nmap <leader>m :FZFMru<cr>
 nmap <leader>rg :Rg<cr>
 
 " coc
@@ -93,11 +93,6 @@ call plug#begin($VIMHOME. '/plugged')
 " => Basic Setting
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 Plug 'chenzhihuai/vim-default-improved'
-Plug 'pgdouyon/vim-evanesco'
-if version >= 900
-    Plug 'noscript/elevator.vim'
-endif
-Plug 'machakann/vim-highlightedyank'
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => Completion
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -107,33 +102,45 @@ Plug 'raimondi/delimitmate'
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => Integrations
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+Plug 'junegunn/gv.vim'
 Plug 'tpope/vim-fugitive'
 Plug 'airblade/vim-gitgutter'
 Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
 Plug 'junegunn/fzf.vim'
+Plug 'pbogut/fzf-mru.vim'
 Plug 'liuchengxu/vista.vim'
 Plug 'scrooloose/nerdtree'
 Plug 'jlanzarotta/bufexplorer'
 Plug 'skywind3000/asyncrun.vim'
+Plug 'skywind3000/asynctasks.vim'
 Plug 'jreybert/vimagit'
+Plug 'skywind3000/vim-terminal-help' "terminal like vscode : alt+=
 "Plug 'puremourning/vimspector'
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => Interface
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+if version >= 900
+    Plug 'noscript/elevator.vim'
+endif
 Plug 'mhinz/vim-startify'
 Plug 'junegunn/vim-peekaboo'
-"Plug 'vim-airline/vim-airline'
+Plug 'morhetz/gruvbox'
 
 Plug 'itchyny/lightline.vim'
 Plug 'mengelbrecht/lightline-bufferline'
 Plug 'albertomontesg/lightline-asyncrun'
 Plug 'josa42/vim-lightline-coc'
-Plug 'morhetz/gruvbox'
+
+" search
+Plug 'machakann/vim-highlightedyank'
+Plug 'markonm/traces.vim'
+Plug 'pgdouyon/vim-evanesco'
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => Commands
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 Plug 'scrooloose/nerdcommenter'
-Plug 'easymotion/vim-easymotion'
+"Plug 'easymotion/vim-easymotion'
+Plug 'monkoose/vim9-stargate'
 "Plug 'justinmk/vim-sneak'
 "cs ds ys and v_S
 Plug 'machakann/vim-sandwich'
@@ -144,13 +151,16 @@ Plug 'mg979/vim-visual-multi'
 "eval expression with g= g== g=
 Plug 'moll/vim-bbye'
 " resize font via ^= ^- and ^mouse
-Plug 'eggbean/resize-font.gvim'
+Plug 'gorkunov/smartpairs.vim'
+Plug 'wincent/ferret'
+Plug 'yegappan/mru'
+Plug 'nanotee/zoxide.vim'
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 call plug#end()
 "}}}
 
 " === Plug Configs === {{{
-
+noremap <c-g> <Cmd>call stargate#OKvim(2)<CR>
 if has_key(g:plugs, 'wilder.nvim')
     call wilder#setup({'modes': [':', '/', '?']})
 
