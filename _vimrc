@@ -141,6 +141,7 @@ Plug 'pgdouyon/vim-evanesco'
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 "Plug 'easymotion/vim-easymotion'
 "Plug 'justinmk/vim-sneak'
+Plug 'andymass/vim-matchup'
 "cs ds ys and v_S
 Plug 'machakann/vim-sandwich'
 Plug 'junegunn/vim-easy-align'
