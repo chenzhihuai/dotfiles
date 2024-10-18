@@ -141,7 +141,12 @@ Plug 'pgdouyon/vim-evanesco'
 " => Commands
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 "Plug 'easymotion/vim-easymotion'
-"Plug 'justinmk/vim-sneak'
+if has('nvim')
+    Plug 'folke/flash.nvim'
+    nmap s <cmd>lua require("flash").jump()<cr>
+else 
+    Plug 'justinmk/vim-sneak'
+endif
 Plug 'andymass/vim-matchup'
 "cs ds ys and v_S
 Plug 'machakann/vim-sandwich'
