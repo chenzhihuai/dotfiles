@@ -10,8 +10,8 @@ function! s:Close(nb_to_keep)
   call filter(times, 'v:val[1] > 0')
   call sort(times, function('s:SortTimeStamps'))
   let nb_to_keep = min([a:nb_to_keep, len(times)])
-  let buffers_to_strip = map(copy(times[0:(nb_to_keep-1)]), 'v:val[0]')
-  exe 'bw '.join(buffers_to_strip, ' ') 
+  let buffers_to_strip = map(copy(times[(nb_to_keep-1):(len(times)-1)]), 'v:val[0]')
+  exec 'silent! bw '.join(buffers_to_strip, ' ') 
 endfunction
 
 " Two ways to use it
