@@ -9,18 +9,20 @@ function! s:Close(nb_to_keep)
   let times = map(copy(saved_buffers), '[(v:val), getftime(bufname(v:val))]')
   call filter(times, 'v:val[1] > 0')
   call sort(times, function('s:SortTimeStamps'))
-  let nb_to_keep = min([a:nb_to_keep, len(times)])
-  let buffers_to_strip = map(copy(times[(nb_to_keep-1):(len(times)-1)]), 'v:val[0]')
-  exec 'silent! bw '.join(buffers_to_strip, ' ') 
+  if a:nb_to_keep < len(times)
+      let nb_to_keep = min([a:nb_to_keep, len(times)])
+      let buffers_to_strip = map(copy(times[0:(len(times)-1-nb_to_keep)]), 'v:val[0]')
+      exec 'silent! bw '.join(buffers_to_strip, ' ') 
+  endif
 endfunction
 
 " Two ways to use it
 " - manually
-command! -nargs=1 CloseOldBuffers call s:Close(<args>)
+command! CloseOldBuffers call s:Close(6)
 " - or automatically
-augroup CloseOldBuffers
-  au!
-  au BufNew * call s:Close(g:nb_buffers_to_keep)
-augroup END
+"augroup CloseOldBuffers
+  "au!
+  "au BufNew * call s:Close(g:nb_buffers_to_keep)
+"augroup END
 " and don't forget to set the option in your .vimrc
 let g:nb_buffers_to_keep = 12
