@@ -97,7 +97,6 @@ Plug 'chenzhihuai/vim-default-improved'
 " => Completion
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 Plug 'neoclide/coc.nvim', {'branch': 'release'}
-"Plug 'ervandew/supertab'
 Plug 'raimondi/delimitmate'
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => Integrations
@@ -110,7 +109,6 @@ Plug 'junegunn/fzf.vim'
 Plug 'pbogut/fzf-mru.vim'
 Plug 'liuchengxu/vista.vim'
 Plug 'scrooloose/nerdtree'
-Plug 'jlanzarotta/bufexplorer'
 Plug 'skywind3000/asyncrun.vim'
 Plug 'skywind3000/asynctasks.vim'
 Plug 'jreybert/vimagit'
@@ -231,7 +229,6 @@ endif
 
 if has_key(g:plugs, 'fzf.vim')
     let g:fzf_preview_window = [] " close preview
-    let g:fzf_layout = { 'window': { 'width': 0.9, 'height': 0.6, 'relative': v:true, 'yoffset': 1.0 } }
 
     let g:fzf_action = {
                 \ 'ctrl-q': 'wall | bdelete',
@@ -446,12 +443,6 @@ if has_key(g:plugs, 'lightline-bufferline')
     nmap <Leader><Tab>   <Plug>lightline#bufferline#go_next_category()
     nmap <Leader><S-Tab> <Plug>lightline#bufferline#go_previous_category()
 
-    nmap <Leader>bl <Plug>lightline#bufferline#move_next()
-    nmap <Leader>bh <Plug>lightline#bufferline#move_previous()
-    nmap <Leader>bk <Plug>lightline#bufferline#move_first()
-    nmap <Leader>bj <Plug>lightline#bufferline#move_last()
-    nmap <Leader>bb <Plug>lightline#bufferline#reset_order()
-
     nmap <Leader>c1 <Plug>lightline#bufferline#delete(1)
     let g:lightline#bufferline#show_number=2
 
@@ -461,26 +452,6 @@ if has_key(g:plugs, 'lightline-bufferline')
     end
 endif
 
-if has_key(g:plugs, 'vim-airline')
-    let g:airline#extensions#vista#enabled = 0
-    let g:airline#extensions#whitespace#enabled = 0
-    let g:airline#extensions#tabline#enabled = 1
-    let g:airline#extensions#tabline#buffer_idx_mode = 1
-    nmap <leader>1 <Plug>AirlineSelectTab1
-    nmap <leader>2 <Plug>AirlineSelectTab2
-    nmap <leader>3 <Plug>AirlineSelectTab3
-    nmap <leader>4 <Plug>AirlineSelectTab4
-    nmap <leader>5 <Plug>AirlineSelectTab5
-    nmap <leader>6 <Plug>AirlineSelectTab6
-    nmap <leader>7 <Plug>AirlineSelectTab7
-    nmap <leader>8 <Plug>AirlineSelectTab8
-    nmap <leader>9 <Plug>AirlineSelectTab9
-    nmap <leader>0 <Plug>AirlineSelectTab0
-    nmap <leader>- <Plug>AirlineSelectPrevTab
-    nmap <leader>+ <Plug>AirlineSelectNextTab
-    let g:airline#extensions#hunks#enabled = 0
-    "let g:airline_powerline_fonts = 1
-endif
 if has_key(g:plugs, 'vim-sandwich')
     runtime macros/sandwich/keymap/surround.vim
 endif
