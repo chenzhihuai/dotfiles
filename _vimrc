@@ -472,7 +472,7 @@ if has_key(g:plugs, 'vim-sandwich')
 endif
 
 " L/R/T/B/N
-let g:buffnrgator_viewport_split_policy='N'
+let g:buffergator_viewport_split_policy='R'
 let g:terminal_list=0 "hidden tereminal-helper in tabline
 
 "}}}
