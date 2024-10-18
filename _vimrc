@@ -36,8 +36,8 @@ nnoremap <leader>e  :e .<cr>
 nnoremap Q          :Bdelete<cr>
 nnoremap <leader>q  :Bdelete<cr>
 cmap m<space> MRU<space>
-nnoremap <leader>]b :bnext<cr>
-nnoremap <leader>[b :bprev<cr>
+nnoremap ]b :bnext<cr>
+nnoremap [b :bprev<cr>
 
 " jump
 "nmap <c-g> <plug>(easymotion-s2)
@@ -85,6 +85,7 @@ call plug#begin($VIMHOME. '/plugged')
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 Plug 'chenzhihuai/vim-default-improved'
 Plug 'jeetsukumaran/vim-buffergator'
+" Plug 'ton/vim-bufsurf' "nav buffer in mru order
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => Completion
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -435,6 +436,8 @@ endif
 
 " L/R/T/B/N
 let g:buffergator_viewport_split_policy='R'
+" [b ]b to mru buffer
+let g:buffergator_keep_old_mru_switching_keymaps=1
 let g:terminal_list=0 "hidden tereminal-helper in tabline
 
 "}}}
