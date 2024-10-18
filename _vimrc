@@ -444,6 +444,7 @@ let g:buffergator_viewport_split_policy='R'
 " [b ]b to mru buffer
 let g:buffergator_keep_old_mru_switching_keymaps=1
 let g:terminal_list=0 "hidden tereminal-helper in tabline
+source ~/dotfiles/autoclose.vim
 
 "}}}
 "
