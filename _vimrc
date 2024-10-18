@@ -34,8 +34,10 @@ nnoremap <leader><space>  :so ~/.vimrc<cr>
 " buffers
 nnoremap <leader>e  :e .<cr>
 nnoremap Q          :Bdelete<cr>
-nnoremap <leader>q  :clo<cr>
+nnoremap <leader>q  :Bdelete<cr>
 cmap m<space> MRU<space>
+nnoremap <leader>]b :bnext<cr>
+nnoremap <leader>[b :bprev<cr>
 
 " jump
 "nmap <c-g> <plug>(easymotion-s2)
@@ -61,17 +63,6 @@ nmap <leader>b :Buffers<cr>
 nmap <leader>m :FZFMru<cr>
 nmap <leader>rg :Rg<cr>
 
-" coc
-nmap <silent> [g <Plug>(coc-diagnostic-prev)
-nmap <silent> ]g <Plug>(coc-diagnostic-next)
-nmap <silent> gd <Plug>(coc-definition)
-nmap <silent> gy <Plug>(coc-type-definition)
-nmap <silent> gi <Plug>(coc-implementation)
-nmap <silent> gR <Plug>(coc-references)
-nmap <silent> ga <Plug>(coc-codeaction-cursor)
-nmap <silent> <leader>R <Plug>(coc-rename)
-nmap <silent> <leader>D :CocList diagnostics<cr>
-nmap <silent> <leader>a :CocCommand clangd.switchSourceHeader<cr>
 
 " align entire buffer
 nnoremap <silent> <Leader>sc :nohlsearch<CR>
@@ -93,27 +84,38 @@ call plug#begin($VIMHOME. '/plugged')
 " => Basic Setting
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 Plug 'chenzhihuai/vim-default-improved'
+Plug 'jeetsukumaran/vim-buffergator'
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => Completion
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 Plug 'neoclide/coc.nvim', {'branch': 'release'}
 Plug 'raimondi/delimitmate'
+Plug 'scrooloose/nerdcommenter'
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => Integrations
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+"Git
 Plug 'junegunn/gv.vim'
 Plug 'tpope/vim-fugitive'
 Plug 'airblade/vim-gitgutter'
+Plug 'jreybert/vimagit'
+
+"Files
 Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
 Plug 'junegunn/fzf.vim'
 Plug 'pbogut/fzf-mru.vim'
 Plug 'liuchengxu/vista.vim'
 Plug 'scrooloose/nerdtree'
+Plug 'wincent/ferret' "Ack ...
+
+"Terminal
 Plug 'skywind3000/asyncrun.vim'
 Plug 'skywind3000/asynctasks.vim'
-Plug 'jreybert/vimagit'
 Plug 'skywind3000/vim-terminal-help' "terminal like vscode : alt+=
+Plug 'voldikss/vim-floaterm'
 "Plug 'puremourning/vimspector'
+"
+
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => Interface
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -124,6 +126,7 @@ Plug 'mhinz/vim-startify'
 Plug 'junegunn/vim-peekaboo'
 Plug 'morhetz/gruvbox'
 
+" statusline
 Plug 'itchyny/lightline.vim'
 Plug 'mengelbrecht/lightline-bufferline'
 Plug 'albertomontesg/lightline-asyncrun'
@@ -136,29 +139,28 @@ Plug 'pgdouyon/vim-evanesco'
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => Commands
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-Plug 'scrooloose/nerdcommenter'
 "Plug 'easymotion/vim-easymotion'
-Plug 'monkoose/vim9-stargate'
 "Plug 'justinmk/vim-sneak'
 "cs ds ys and v_S
 Plug 'machakann/vim-sandwich'
-" Tabularize /^[^,]*\zs/r1c1l0 (digits are spaces before delimater)
-Plug 'godlygeek/tabular'
+Plug 'junegunn/vim-easy-align'
 "<c-n> n N q Q [ ] <c-down>
 Plug 'mg979/vim-visual-multi'
 "eval expression with g= g== g=
-Plug 'moll/vim-bbye'
 " resize font via ^= ^- and ^mouse
 Plug 'gorkunov/smartpairs.vim'
-Plug 'wincent/ferret'
+
+"buffer
+Plug 'moll/vim-bbye'
 Plug 'yegappan/mru'
+Plug 'schickling/vim-bufonly'
 Plug 'nanotee/zoxide.vim'
+Plug 'danro/rename.vim'
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 call plug#end()
 "}}}
 
 " === Plug Configs === {{{
-noremap <c-g> <Cmd>call stargate#OKvim(2)<CR>
 if has_key(g:plugs, 'wilder.nvim')
     call wilder#setup({'modes': [':', '/', '?']})
 
@@ -180,6 +182,18 @@ if has_key(g:plugs, 'wilder.nvim')
                 \ })))
 endif
 if has_key(g:plugs, 'coc.nvim')
+
+    " coc
+    nmap <silent> [g <Plug>(coc-diagnostic-prev)
+    nmap <silent> ]g <Plug>(coc-diagnostic-next)
+    nmap <silent> gd <Plug>(coc-definition)
+    nmap <silent> gy <Plug>(coc-type-definition)
+    nmap <silent> gi <Plug>(coc-implementation)
+    nmap <silent> gR <Plug>(coc-references)
+    nmap <silent> ga <Plug>(coc-codeaction-cursor)
+    nmap <silent> <leader>R <Plug>(coc-rename)
+    nmap <silent> <leader>D :CocList diagnostics<cr>
+    nmap <silent> <leader>a :CocCommand clangd.switchSourceHeader<cr>
     inoremap <silent><expr> <TAB>
                 \ coc#pum#visible() ? coc#pum#next(1) :
                 \ CheckBackspace() ? "\<Tab>" :
@@ -455,6 +469,10 @@ endif
 if has_key(g:plugs, 'vim-sandwich')
     runtime macros/sandwich/keymap/surround.vim
 endif
+
+" L/R/T/B/N
+let g:buffnrgator_viewport_split_policy='N'
+let g:terminal_list=0 "hidden tereminal-helper in tabline
 
 "}}}
 "
