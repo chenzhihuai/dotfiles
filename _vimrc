@@ -274,6 +274,8 @@ if has_key(g:plugs, 'lightline.vim')
         endif
         return get(s:p, &ft, lightline#mode())
     endfunction
+
+    let g:lightline#bufferline#filter_by_tabpage=1
     let g:lightline = {
                 \ 'colorscheme':'gruvbox',
                 \ 'active': {
@@ -285,7 +287,8 @@ if has_key(g:plugs, 'lightline.vim')
                 \   'right': [['lineinfo']]
                 \ },
                 \ 'component': {
-                \   'lineinfo':'%{%winwidth(0)>70?"%3l:%-2c☰%3p%%":""%}'
+                \   'lineinfo':'%{%winwidth(0)>70?"%3l:%-2c☰%3p%%":""%}',
+                \ 'tabinfo': "tabs: %{tabpagenr() . '/' . tabpagenr('$')}"
                 \ }, 
                 \ 'component_visible_condition': {
                     \ 'lineinfo': 'fname =~# "NERD_tree"'
@@ -307,7 +310,7 @@ if has_key(g:plugs, 'lightline.vim')
                 \ 'subseparator': { 'left': '', 'right': '' },
                 \ 'tabline': {
                 \   'left': [ ['buffers'] ],
-                \   'right': [ ['close'] ]
+                \   'right': [ ['tabinfo'] ]
                 \ }
                 \ }
     call lightline#coc#register()
