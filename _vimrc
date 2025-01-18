@@ -277,7 +277,7 @@ if has_key(g:plugs, 'lightline.vim')
 
     let g:lightline#bufferline#filter_by_tabpage=1
     let g:lightline = {
-                \ 'colorscheme':'gruvbox',
+                \ 'colorscheme':'default',
                 \ 'active': {
                 \   'left': [ [ 'mode','paste', 'coc_errors' ], [ 'fugitive'],['filename'] ],
                 \   'right': [ [ 'syntastic', 'lineinfo' ], ['fileinfo'], [ 'filetype' ] ]
